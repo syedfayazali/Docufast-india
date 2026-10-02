@@ -20,7 +20,7 @@ export default function Navbar({ scrolled }) {
     <header className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="container navbar-inner">
         <Link to="/" className="navbar-logo">
-          <span>DocuFast</span><span className="gold">India</span>
+          <img src="/logos/docufast-logo.png" alt="DocuFast India" style={{ height: '40px', width: 'auto' }} />
         </Link>
         <nav className={`navbar-links ${open ? 'open' : ''}`} onClick={() => setOpen(false)}>
           {links.map(l => (

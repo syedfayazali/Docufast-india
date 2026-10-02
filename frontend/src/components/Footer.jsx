@@ -6,10 +6,7 @@ export default function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div>
-            <div className="navbar-logo" style={{ marginBottom: '16px' }}>
-              <span style={{ color: 'white', fontSize: '22px', fontWeight: 800 }}>DocuFast</span>
-              <span style={{ color: 'var(--gold)', fontSize: '22px', fontWeight: 800 }}>India</span>
-            </div>
+            <img src="/logos/docufast-full.png" alt="DocuFast India" style={{ height: '56px', width: 'auto', marginBottom: '16px' }} />
             <p style={{ fontSize: '14px', maxWidth: '300px' }}>
               India's trusted document platform — making document services simple, secure and accessible with doorstep convenience.
             </p>

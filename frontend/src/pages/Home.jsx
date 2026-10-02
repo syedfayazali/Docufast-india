@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client.js';
+import useScrollReveal from '../hooks/useScrollReveal.js';
 
 const reviews = [
   { n: 'Ananya R.', loc: 'Pune, Maharashtra', t: 'Renewed my passport without a single office visit. Tracking was spot on and the delivery agent was very professional.' },
@@ -23,6 +24,8 @@ const faqs = [
 export default function Home() {
   const [services, setServices] = useState([]);
   const [openFaq, setOpenFaq] = useState(null);
+
+  useScrollReveal([services]);
 
   useEffect(() => {
     api.getServices().then(data => setServices(data.services)).catch(() => {});
