@@ -1,18 +1,43 @@
 # AGENTS.md
 
 ## Project Overview
-Single-file static website (`index.html`) for DocuFast India — a document services landing page. No build step, no backend, no dependencies.
+DocuFast India — a full-stack document services platform. React frontend with Vite, Express.js backend with SQLite, user authentication, application tracking, and multiple pages.
+
+## Architecture
+- **Frontend** (`/frontend`): React 18 + Vite + React Router. Served on port 5173 (mapped to host 3000). Proxies `/api` to backend.
+- **Backend** (`/backend`): Express.js with better-sqlite3. Runs on port 4000 (internal). JWT auth with bcryptjs password hashing.
+- **Database**: SQLite at `/tmp/docufast.db` (auto-created on first boot, seeded with services and blog posts).
 
 ## Running the App
-- Served via nginx (Alpine) in `docker-compose.base44.yml` on host port 3000.
-- The `index.html` file is bind-mounted read-only into the nginx container.
 - Start: `docker compose -f docker-compose.base44.yml up -d`
+- Frontend: `http://localhost:3000`
+- API health: `http://localhost:3000/api/health`
+- Both services use `node:22-slim` with source bind-mounted; `npm install` runs on container startup.
 
-## External Service: Web3Forms
-- The contact form posts to `https://api.web3forms.com/submit`.
-- The access key is embedded as a hidden input in `index.html` with placeholder value `YOUR_WEB3FORMS_KEY`.
-- The site loads fine without a real key; only form submission is blocked (shows a toast warning).
-- To enable form submission, replace `YOUR_WEB3FORMS_KEY` in `index.html` with a real Web3Forms access key from https://web3forms.com.
+## Key Features
+- User registration and login (JWT-based)
+- Service listing and detail pages (12 services)
+- Application submission with tracking ID generation
+- Order tracking page with status stages
+- User dashboard showing application history
+- Blog with seeded posts
+- Contact form (saves to DB)
+- Protected routes (dashboard requires auth)
+
+## API Routes
+- `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me`
+- `GET /api/services`, `GET /api/services/:slug`
+- `POST /api/applications` (auth), `GET /api/applications` (auth)
+- `GET /api/track/:trackingId`
+- `GET /api/blog`, `GET /api/blog/:slug`
+- `POST /api/contact`
 
 ## Editing
-- Edits to `index.html` are reflected immediately (bind mount). Call `reload_preview` after changes since nginx serves the file directly with no live-reload.
+- Frontend changes hot-reload via Vite HMR.
+- Backend changes require `docker compose restart backend` (uses `node --watch` so should auto-reload).
+- The old `index.html` at repo root is the original static version, preserved for reference.
+
+## Tech Stack
+- React 18, React Router 6, Vite 5
+- Express 4, better-sqlite3, bcryptjs, jsonwebtoken
+- Docker Compose with node:22-slim base images
