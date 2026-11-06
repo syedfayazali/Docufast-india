@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Admin · DocuFast India</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#0A2E6E; --gold:#F4B000; --bg:#f4f6fb; --grey:#e3e7ef; --ink:#14203a; --muted:#6b7488; --danger:#c62828; --ok:#0a7d3e;}
+  *{box-sizing:border-box}
+  body{margin:0; font-family:Inter,system-ui,sans-serif; background:var(--bg); color:var(--ink); min-height:100vh; -webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:Poppins,sans-serif; color:var(--navy); margin:0}
+  .wrap{max-width:960px; margin:0 auto; padding:clamp(16px,4vw,40px)}
+  .card{background:#fff; border:1px solid var(--grey); border-radius:16px; padding:clamp(18px,3vw,28px); box-shadow:0 8px 30px -18px rgba(10,46,110,.25)}
+  .topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:22px}
+  .brand{display:flex; align-items:center; gap:10px}
+  .brand .mark{width:38px; height:38px; border-radius:11px; background:var(--navy); color:var(--gold); display:grid; place-items:center; font:700 15px Poppins}
+  .who{font-size:13px; color:var(--muted)}
+  label{display:block; font-size:12.5px; font-weight:600; margin:0 0 6px}
+  input[type=text],input[type=email],input[type=password],textarea{
+    width:100%; padding:12px 14px; border:1.5px solid var(--grey); border-radius:10px; font:inherit; font-size:14px; background:#fff; transition:border-color .2s, box-shadow .2s}
+  textarea{resize:vertical}
+  input:focus,textarea:focus{outline:none; border-color:var(--navy); box-shadow:0 0 0 4px rgba(10,46,110,.08)}
+  .field{margin-bottom:16px}
+  .row{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+  @media(max-width:640px){.row{grid-template-columns:1fr}}
+  .btn{border:0; border-radius:10px; padding:12px 22px; font:600 14px Poppins,sans-serif; cursor:pointer; transition:transform .15s, opacity .2s}
+  .btn:active{transform:scale(.98)} .btn[disabled]{opacity:.6; cursor:not-allowed}
+  .btn-primary{background:var(--navy); color:#fff}
+  .btn-ghost{background:#fff; color:var(--navy); border:1.5px solid var(--grey)}
+  .btn-danger{background:#fff; color:var(--danger); border:1.5px solid #f1c9c9}
+  .btn-sm{padding:7px 14px; font-size:12.5px}
+  .msg{display:none; padding:11px 14px; border-radius:10px; font-size:13.5px; margin-bottom:16px}
+  .msg.err{display:block; background:#fff3f3; color:var(--danger)} .msg.ok{display:block; background:#f0fff4; color:var(--ok)}
+  .login{max-width:400px; margin:min(14vh,120px) auto 0}
+  .login h1{font-size:22px; margin-bottom:4px} .login p{color:var(--muted); font-size:14px; margin:0 0 22px}
+  .grid{display:grid; gap:22px}
+  .check{display:flex; align-items:center; gap:8px; font-size:14px; margin-bottom:18px}
+  .check input{width:18px; height:18px; accent-color:var(--navy)}
+  .post{display:flex; gap:14px; align-items:flex-start; justify-content:space-between; padding:16px 0; border-top:1px solid var(--grey)}
+  .post:first-child{border-top:0; padding-top:4px}
+  .post h3{font-size:15px; margin-bottom:4px; overflow-wrap:anywhere}
+  .post .meta{font-size:12.5px; color:var(--muted); display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+  .tag{background:rgba(10,46,110,.08); color:var(--navy); padding:2px 10px; border-radius:99px; font-weight:600; font-size:11.5px}
+  .badge-draft{background:#fff4d6; color:#8a6100; padding:2px 10px; border-radius:99px; font-weight:600; font-size:11.5px}
+  .actions{display:flex; gap:8px; flex-shrink:0; flex-wrap:wrap; justify-content:flex-end}
+  .empty{color:var(--muted); font-size:14px; padding:10px 0}
+  .hidden{display:none!important}
+  @media(max-width:560px){.post{flex-direction:column} .actions{justify-content:flex-start}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- LOGIN -->
+  <div id="loginView" class="login card hidden">
+    <h1>Admin sign in</h1>
+    <p>DocuFast India · blog management</p>
+    <div id="loginMsg" class="msg"></div>
+    <form id="loginForm" autocomplete="on">
+      <div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="username" required></div>
+      <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required></div>
+      <button id="loginBtn" class="btn btn-primary" style="width:100%" type="submit">Sign in</button>
+    </form>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashView" class="hidden">
+    <div class="topbar">
+      <div class="brand"><div class="mark">DF</div><div><h2 style="font-size:17px">Blog admin</h2><div class="who" id="who"></div></div></div>
+      <button id="logoutBtn" class="btn btn-ghost btn-sm" type="button">Sign out</button>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3 style="font-size:16px;margin-bottom:18px">New post</h3>
+        <div id="postMsg" class="msg"></div>
+        <form id="postForm">
+          <div class="row">
+            <div class="field"><label for="title">Title *</label><input id="title" type="text" maxlength="160" required></div>
+            <div class="field"><label for="tag">Category</label><input id="tag" type="text" maxlength="40" placeholder="e.g. Passport, PAN, Tips"></div>
+          </div>
+          <div class="field"><label for="excerpt">Short description (shown on the blog card) *</label><textarea id="excerpt" rows="3" maxlength="300" required></textarea></div>
+          <div class="field"><label for="content">Full article</label><textarea id="content" rows="9" placeholder="Line breaks become paragraphs."></textarea></div>
+          <label class="check"><input id="published" type="checkbox" checked> Publish immediately (untick to save as draft)</label>
+          <button id="postBtn" class="btn btn-primary" type="submit">Save post</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;flex-wrap:wrap">
+          <h3 style="font-size:16px">All posts</h3>
+          <button id="refreshBtn" class="btn btn-ghost btn-sm" type="button">Refresh</button>
+        </div>
+        <div id="posts"><div class="empty">Loading…</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Public anon key (safe to expose). All write access is enforced by Row Level Security:
+// only users listed in public.admins can create/edit/delete posts.
+const SB_URL = 'https://nwwmdglqdqoupmefwbbl.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53d21kZ2xxZHFvdXBtZWZ3YmJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM5NjM0MTksImV4cCI6MjEwOTUzOTQxOX0.Y8_sPJaXLVLutL7zHpMUCIVA--eQOKGyigZ7LxrH6OE';
+
+const $ = id => document.getElementById(id);
+const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// ---- session (this browser tab only) ----
+const getSession = () => { try { return JSON.parse(sessionStorage.getItem('dfSession') || 'null'); } catch(e){ return null; } };
+const setSession = v => { try { v ? sessionStorage.setItem('dfSession', JSON.stringify(v)) : sessionStorage.removeItem('dfSession'); } catch(e){} };
+
+async function authRequest(grant, body){
+  const r = await fetch(SB_URL + '/auth/v1/token?grant_type=' + grant, {
+    method: 'POST', headers: { apikey: SB_KEY, 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error_description || j.msg || 'Login failed');
+  return { access_token: j.access_token, refresh_token: j.refresh_token,
+           expires_at: Math.floor(Date.now()/1000) + (j.expires_in || 3600), email: (j.user && j.user.email) || '' };
+}
+async function getToken(){
+  let s = getSession(); if (!s) return null;
+  if (s.expires_at - 30 < Date.now()/1000) {
+    try { s = await authRequest('refresh_token', { refresh_token: s.refresh_token }); setSession(s); }
+    catch(e){ setSession(null); return null; }
+  }
+  return s.access_token;
+}
+async function api(path, opts = {}) {
+  const token = await getToken();
+  if (!token) throw new Error('Session expired. Please sign in again.');
+  const headers = { apikey: SB_KEY, Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' };
+  if (opts.method === 'POST') headers.Prefer = 'return=representation';
+  const res = await fetch(SB_URL + '/rest/v1/' + path, { ...opts, headers });
+  if (!res.ok) throw new Error(await res.text());
+  const t = await res.text();
+  return t ? JSON.parse(t) : null;
+}
+
+// ---- UI helpers ----
+function say(el, kind, text){ el.className = 'msg ' + kind; el.textContent = text; }
+function clearMsg(el){ el.className = 'msg'; el.textContent = ''; }
+function show(view){ $('loginView').classList.toggle('hidden', view !== 'login'); $('dashView').classList.toggle('hidden', view !== 'dash'); }
+
+// ---- login / logout ----
+$('loginForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = $('loginBtn'); clearMsg($('loginMsg'));
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  try {
+    const sess = await authRequest('password', { email: $('email').value.trim(), password: $('password').value });
+    setSession(sess);
+    const ok = await api('rpc/is_admin', { method: 'POST', body: '{}' });
+    if (ok !== true) throw new Error('This account does not have admin access.');
+    $('password').value = '';
+    await openDashboard();
+  } catch(err) {
+    setSession(null);
+    say($('loginMsg'), 'err', err.message && err.message.length < 140 ? err.message : 'Login failed. Please try again.');
+    $('password').value = '';
+  } finally { btn.disabled = false; btn.textContent = 'Sign in'; }
+});
+
+$('logoutBtn').addEventListener('click', () => { setSession(null); show('login'); $('email').focus(); });
+
+async function openDashboard(){
+  const s = getSession();
+  $('who').textContent = s && s.email ? 'Signed in as ' + s.email : '';
+  show('dash');
+  await loadPosts();
+}
+
+// ---- posts ----
+async function loadPosts(){
+  const box = $('posts');
+  try {
+    const data = await api('blog_posts?select=id,title,tag,published,created_at&order=created_at.desc');
+    if (!data || !data.length) { box.innerHTML = '<div class="empty">No posts yet. Create your first one above.</div>'; return; }
+    box.innerHTML = data.map(p => `
+      <div class="post">
+        <div>
+          <h3>${esc(p.title)}</h3>
+          <div class="meta">
+            <span class="tag">${esc(p.tag)}</span>
+            ${p.published ? '' : '<span class="badge-draft">Draft</span>'}
+            <span>${new Date(p.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</span>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-ghost btn-sm" data-act="toggle" data-id="${esc(p.id)}" data-pub="${p.published}">${p.published ? 'Unpublish' : 'Publish'}</button>
+          <button class="btn btn-danger btn-sm" data-act="delete" data-id="${esc(p.id)}">Delete</button>
+        </div>
+      </div>`).join('');
+  } catch(err) {
+    box.innerHTML = '<div class="empty" style="color:var(--danger)">Could not load posts: ' + esc(err.message).slice(0,200) + '</div>';
+  }
+}
+
+$('posts').addEventListener('click', async e => {
+  const btn = e.target.closest('button[data-act]'); if (!btn) return;
+  const id = encodeURIComponent(btn.dataset.id);
+  try {
+    if (btn.dataset.act === 'delete') {
+      if (!confirm('Delete this post permanently?')) return;
+      await api('blog_posts?id=eq.' + id, { method: 'DELETE' });
+    } else {
+      await api('blog_posts?id=eq.' + id, { method: 'PATCH', body: JSON.stringify({ published: btn.dataset.pub !== 'true' }) });
+    }
+    await loadPosts();
+  } catch(err) { alert('Action failed: ' + (err.message || '').slice(0,200)); }
+});
+
+$('refreshBtn').addEventListener('click', loadPosts);
+
+$('postForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = $('postBtn'); clearMsg($('postMsg'));
+  const body = {
+    title: $('title').value.trim(),
+    tag: $('tag').value.trim() || 'General',
+    excerpt: $('excerpt').value.trim(),
+    content: $('content').value.trim() || null,
+    published: $('published').checked
+  };
+  if (!body.title || !body.excerpt) { say($('postMsg'), 'err', 'Title and short description are required.'); return; }
+  btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    await api('blog_posts', { method: 'POST', body: JSON.stringify(body) });
+    $('postForm').reset(); $('published').checked = true;
+    say($('postMsg'), 'ok', body.published ? 'Post published. It is now live on the website.' : 'Draft saved.');
+    await loadPosts();
+  } catch(err) {
+    say($('postMsg'), 'err', 'Could not save: ' + (err.message || '').slice(0,200));
+  } finally { btn.disabled = false; btn.textContent = 'Save post'; }
+});
+
+// ---- start ----
+(async () => {
+  if (getSession()) {
+    try { if ((await api('rpc/is_admin', { method: 'POST', body: '{}' })) === true) { await openDashboard(); return; } } catch(e){}
+    setSession(null);
+  }
+  show('login');
+})();
+</script>
+</body>
+</html>

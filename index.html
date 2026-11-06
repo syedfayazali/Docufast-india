@@ -899,44 +899,6 @@ img,video,iframe{max-width:100%}
       <p>Guides and news on passports, identity documents, and government processes.</p>
     </div>
     <div class="blog-grid stagger" id="blogGrid"></div>
-    <!-- Blog Admin Button -->
-    <div style="text-align:center;margin-top:40px;">
-      <button id="adminToggleBtn" onclick="showAdminLogin()" style="background:none;border:1.5px dashed rgba(10,46,110,.25);color:#0A2E6E;padding:8px 20px;border-radius:8px;font-size:12px;font-family:Poppins,sans-serif;cursor:pointer;opacity:.6;">+ Add Blog Post (Admin)</button>
-    </div>
-    <!-- Login Modal -->
-    <div id="adminLoginModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;">
-      <div style="background:#fff;border-radius:16px;padding:32px;max-width:360px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);">
-        <h3 style="font-family:Poppins,sans-serif;color:#0A2E6E;margin-bottom:6px;">Admin Access</h3>
-        <p style="color:#888;font-size:.85rem;margin-bottom:20px;">Sign in with your admin account to manage blog posts.</p>
-        <input id="adminEmailInput" type="email" autocomplete="username" placeholder="Admin email" style="width:100%;padding:12px 14px;border:1.5px solid rgba(10,46,110,.2);border-radius:8px;font-size:.9rem;margin-bottom:10px;" onkeydown="if(event.key==='Enter')document.getElementById('adminPwInput').focus()">
-        <input id="adminPwInput" type="password" autocomplete="current-password" placeholder="Password" style="width:100%;padding:12px 14px;border:1.5px solid rgba(10,46,110,.2);border-radius:8px;font-size:.9rem;margin-bottom:14px;" onkeydown="if(event.key==='Enter')checkAdminLogin()">
-        <div style="display:flex;gap:10px;">
-          <button id="adminLoginBtn" onclick="checkAdminLogin()" style="flex:1;background:#0A2E6E;color:#fff;padding:11px;border-radius:8px;border:none;font-family:Poppins,sans-serif;font-weight:600;cursor:pointer;">Login</button>
-          <button onclick="document.getElementById('adminLoginModal').style.display='none'" style="flex:1;background:#f1f3f5;color:#333;padding:11px;border-radius:8px;border:none;font-family:Poppins,sans-serif;font-weight:600;cursor:pointer;">Cancel</button>
-        </div>
-        <div id="adminLoginErr" style="color:#c00;font-size:.8rem;margin-top:10px;display:none;">Login failed.</div>
-      </div>
-    </div>
-    <!-- Blog Admin Panel -->
-    <div id="blogAdminPanel" style="display:none;margin-top:24px;background:#f8f9fb;border-radius:16px;padding:28px;border:1.5px solid rgba(10,46,110,.1);">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
-        <h3 style="font-family:Poppins,sans-serif;color:#0A2E6E;font-size:1rem;margin:0;">Add New Blog Post</h3>
-        <span id="ba-who" style="font-size:.78rem;color:#888;margin-left:auto;"></span>
-        <button onclick="adminLogout()" style="background:#fff;border:1.5px solid rgba(10,46,110,.2);color:#0A2E6E;padding:6px 14px;border-radius:8px;font-size:.78rem;font-family:Poppins,sans-serif;font-weight:600;cursor:pointer;">Log out</button>
-        <button onclick="document.getElementById('blogAdminPanel').style.display='none'" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:#888;">✕</button>
-      </div>
-      <div style="display:grid;gap:14px;">
-        <input id="ba-title" type="text" placeholder="Post title *" style="padding:12px 14px;border:1.5px solid rgba(10,46,110,.15);border-radius:8px;font-size:.9rem;width:100%;font-family:Inter,sans-serif;">
-        <input id="ba-tag" type="text" placeholder="Category (e.g. Passport, PAN, Tips)" style="padding:12px 14px;border:1.5px solid rgba(10,46,110,.15);border-radius:8px;font-size:.9rem;width:100%;font-family:Inter,sans-serif;">
-        <textarea id="ba-excerpt" rows="3" placeholder="Short description shown on blog card *" style="padding:12px 14px;border:1.5px solid rgba(10,46,110,.15);border-radius:8px;font-size:.9rem;width:100%;font-family:Inter,sans-serif;resize:vertical;"></textarea>
-        <textarea id="ba-content" rows="8" placeholder="Full post content (supports line breaks for paragraphs)" style="padding:12px 14px;border:1.5px solid rgba(10,46,110,.15);border-radius:8px;font-size:.9rem;width:100%;font-family:Inter,sans-serif;resize:vertical;"></textarea>
-        <div id="ba-status" style="display:none;padding:10px 14px;border-radius:8px;font-size:.85rem;"></div>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;">
-          <button id="ba-submit" onclick="saveBlogPost()" style="background:#0A2E6E;color:#fff;padding:11px 28px;border-radius:8px;border:none;font-family:Poppins,sans-serif;font-weight:600;font-size:.88rem;cursor:pointer;">Publish Post</button>
-          <button onclick="document.getElementById('blogAdminPanel').style.display='none'" style="background:#fff;color:#0A2E6E;padding:11px 24px;border-radius:8px;border:1.5px solid rgba(10,46,110,.2);font-family:Poppins,sans-serif;font-weight:600;font-size:.88rem;cursor:pointer;">Cancel</button>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -1252,16 +1214,8 @@ function showToast(msg, bg){
   setTimeout(()=>{t.style.opacity='0'; setTimeout(()=>t.remove(),500);},3500);
 }
 
-// Blog admin
-
-
-
-
-
-
-// ── SUPABASE CONFIG ──
-// The anon key is public by design. Security comes from Row Level Security + Supabase Auth
-// (see supabase/blog_admin_setup.sql). No admin password lives in this file.
+// Blog (read-only). Posts are managed from the private admin page.
+// The anon key is public by design; Row Level Security allows reading published posts only.
 const SB_URL = 'https://nwwmdglqdqoupmefwbbl.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53d21kZ2xxZHFvdXBtZWZ3YmJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM5NjM0MTksImV4cCI6MjEwOTUzOTQxOX0.Y8_sPJaXLVLutL7zHpMUCIVA--eQOKGyigZ7LxrH6OE';
 
@@ -1269,48 +1223,10 @@ function esc(v){
   return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-// ── Admin session (Supabase Auth, kept for this browser tab only) ──
-function getSession(){ try { return JSON.parse(sessionStorage.getItem('dfSession') || 'null'); } catch(e){ return null; } }
-function setSession(v){ try { v ? sessionStorage.setItem('dfSession', JSON.stringify(v)) : sessionStorage.removeItem('dfSession'); } catch(e){} }
-function isAdminSession(){ const s = getSession(); return !!(s && s.access_token); }
-
-async function authRequest(grant, body){
-  const r = await fetch(SB_URL + '/auth/v1/token?grant_type=' + grant, {
-    method: 'POST',
-    headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+async function sbFetch(path) {
+  const res = await fetch(SB_URL + '/rest/v1/' + path, {
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
   });
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(j.error_description || j.msg || 'Login failed');
-  return {
-    access_token: j.access_token,
-    refresh_token: j.refresh_token,
-    expires_at: Math.floor(Date.now()/1000) + (j.expires_in || 3600),
-    email: (j.user && j.user.email) || ''
-  };
-}
-
-async function getToken(){
-  let s = getSession();
-  if (!s) return null;
-  if (s.expires_at - 30 < Date.now()/1000) {
-    try { s = await authRequest('refresh_token', { refresh_token: s.refresh_token }); setSession(s); }
-    catch(e){ setSession(null); return null; }
-  }
-  return s.access_token;
-}
-
-async function sbFetch(path, options={}) {
-  const token = await getToken();
-  const headers = {
-    'apikey': SB_KEY,
-    'Authorization': 'Bearer ' + (token || SB_KEY),
-    'Content-Type': 'application/json'
-  };
-  if (options.method === 'POST') headers['Prefer'] = 'return=representation';
-  Object.assign(headers, options.headers || {});
-  const { headers: _ignored, ...rest } = options;
-  const res = await fetch(SB_URL + '/rest/v1/' + path, { ...rest, headers });
   if (!res.ok) throw new Error(await res.text());
   const text = await res.text();
   return text ? JSON.parse(text) : null;
@@ -1332,8 +1248,7 @@ async function renderBlogGrid() {
         <div class="blog-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><rect x="4" y="3" width="16" height="18" rx="2" stroke-width="1.4"/><path d="M8 8h8M8 12h8M8 16h5" stroke-width="1.4" stroke-linecap="round"/></svg></div>
         <div class="blog-body">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span class="blog-tag">${esc(p.tag)}</span>
-            ${isAdminSession()?`<button onclick="event.stopPropagation();deleteBlogPost('${esc(p.id)}')" style="margin-left:auto;background:rgba(220,0,0,.1);color:#c00;border:none;padding:3px 10px;border-radius:6px;font-size:.7rem;cursor:pointer;">✕ Delete</button>`:''}</div>
+            <span class="blog-tag">${esc(p.tag)}</span></div>
           <h3>${esc(p.title)}</h3>
           <p>${esc(p.excerpt)}</p>
           <div class="blog-meta">
@@ -1350,7 +1265,7 @@ async function renderBlogGrid() {
 
 async function openPost(id) {
   try {
-    const data = await sbFetch(`blog_posts?id=eq.${id}&select=*`);
+    const data = await sbFetch(`blog_posts?id=eq.${encodeURIComponent(id)}&select=*`);
     const p = data[0];
     if (!p) return;
     const modal = document.createElement('div');
@@ -1372,101 +1287,6 @@ async function openPost(id) {
     modal.onclick = e => { if(e.target === modal) modal.remove(); };
     document.body.appendChild(modal);
   } catch(e) { alert('Could not load post. Please try again.'); }
-}
-
-async function deleteBlogPost(id) {
-  if (!confirm('Delete this post permanently?')) return;
-  try {
-    await sbFetch(`blog_posts?id=eq.${id}`, { method: 'DELETE' });
-    renderBlogGrid();
-  } catch(e) { alert('Delete failed: ' + e.message); }
-}
-
-function showAdminPanel() {
-  const panel = document.getElementById('blogAdminPanel');
-  panel.style.display = 'block';
-  const who = document.getElementById('ba-who');
-  const sess = getSession();
-  if (who && sess) who.textContent = sess.email ? 'Signed in as ' + sess.email : '';
-  panel.scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-function showAdminLogin() {
-  if (isAdminSession()) { showAdminPanel(); return; }
-  const modal = document.getElementById('adminLoginModal');
-  modal.style.display = 'flex';
-  setTimeout(() => document.getElementById('adminEmailInput').focus(), 100);
-}
-
-async function checkAdminLogin() {
-  const email = document.getElementById('adminEmailInput').value.trim();
-  const pw = document.getElementById('adminPwInput').value;
-  const err = document.getElementById('adminLoginErr');
-  const btn = document.getElementById('adminLoginBtn');
-  err.style.display = 'none';
-  if (!email || !pw) { err.textContent = 'Enter your admin email and password.'; err.style.display = 'block'; return; }
-  btn.disabled = true; btn.textContent = 'Signing in…';
-  try {
-    const sess = await authRequest('password', { email, password: pw });
-    setSession(sess);
-    // Confirm this account is really an admin (the database enforces it too)
-    const ok = await sbFetch('rpc/is_admin', { method: 'POST', body: '{}' });
-    if (ok !== true) { setSession(null); throw new Error('This account does not have admin access.'); }
-    document.getElementById('adminLoginModal').style.display = 'none';
-    document.getElementById('adminPwInput').value = '';
-    showAdminPanel();
-    renderBlogGrid(); // re-render to show delete buttons
-  } catch(e) {
-    setSession(null);
-    err.textContent = (e.message && e.message.length < 140) ? e.message : 'Login failed. Please try again.';
-    err.style.display = 'block';
-    document.getElementById('adminPwInput').value = '';
-  } finally {
-    btn.disabled = false; btn.textContent = 'Login';
-  }
-}
-
-function adminLogout() {
-  setSession(null);
-  document.getElementById('blogAdminPanel').style.display = 'none';
-  renderBlogGrid();
-}
-
-async function saveBlogPost() {
-  const title = document.getElementById('ba-title').value.trim();
-  const excerpt = document.getElementById('ba-excerpt').value.trim();
-  const content = document.getElementById('ba-content').value.trim();
-  const tag = document.getElementById('ba-tag').value.trim() || 'General';
-  const status = document.getElementById('ba-status');
-  const btn = document.getElementById('ba-submit');
-
-  if (!title || !excerpt) { 
-    status.style.display='block';status.style.background='#fff3f3';status.style.color='#c00';
-    status.textContent='⚠ Title and description are required!'; return; 
-  }
-
-  btn.disabled = true; btn.textContent = 'Publishing…';
-  status.style.display = 'none';
-
-  try {
-    await sbFetch('blog_posts', {
-      method: 'POST',
-      body: JSON.stringify({ title, tag, excerpt, content, published: true })
-    });
-    document.getElementById('ba-title').value = '';
-    document.getElementById('ba-excerpt').value = '';
-    document.getElementById('ba-content').value = '';
-    document.getElementById('ba-tag').value = '';
-    status.style.display='block';status.style.background='#f0fff4';status.style.color='#0a7d3e';
-    status.textContent = '✅ Post published successfully!';
-    renderBlogGrid();
-    setTimeout(() => { document.getElementById('blogAdminPanel').style.display='none'; status.style.display='none'; }, 2000);
-  } catch(e) {
-    status.style.display='block';status.style.background='#fff3f3';status.style.color='#c00';
-    status.textContent = '❌ Failed to publish: ' + e.message;
-  } finally {
-    btn.disabled = false; btn.textContent = 'Publish Post';
-  }
 }
 
 // Initial load
