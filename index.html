@@ -1037,9 +1037,12 @@ img,video,iframe{max-width:100%}
 
 <script>
 // ---------- Loader ----------
-window.addEventListener('load', () => {
-  setTimeout(() => document.getElementById('loader').classList.add('hide'), 700);
-});
+(function(){
+  const hideLoader = () => { const l = document.getElementById('loader'); if(l) l.classList.add('hide'); };
+  window.addEventListener('load', () => setTimeout(hideLoader, 700));
+  document.addEventListener('DOMContentLoaded', () => setTimeout(hideLoader, 2500)); // don't wait on slow fonts/map/images
+  setTimeout(hideLoader, 5000); // absolute failsafe
+})();
 
 // ---------- Header scroll state ----------
 const header = document.getElementById('siteHeader');
@@ -1144,7 +1147,6 @@ const posts = [
   {tag:'Document Guides', title:'Driving licence renewal: documents you actually need', d:'A simplified list to avoid repeat visits and delays.', date:'Apr 22, 2026', read:'4 min read'},
 ];
 
-}document.querySelectorAll('#blogGrid .reveal').forEach(el=>io.observe(el));
 
 // ---------- FAQ ----------
 const faqs = [
