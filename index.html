@@ -610,6 +610,34 @@ img,video,iframe{max-width:100%}
   .hero-actions .btn{width:100%!important;text-align:center!important}
 }
 
+
+/* ── CONTACT ALIGNMENT ── */
+.contact-grid{align-items:stretch; gap:clamp(28px,4vw,56px); padding:clamp(24px,5vw,64px)}
+.contact-info{display:flex; flex-direction:column}
+.contact-info h2{margin:16px 0 12px; line-height:1.2}
+.contact-info > p{margin:0 0 28px; max-width:46ch}
+.contact-item{align-items:center; gap:16px}
+.contact-info .contact-item{padding:14px 16px; margin:0 0 14px; border:1px solid var(--grey); border-radius:14px; background:var(--bg)}
+.contact-info .contact-item:last-child{margin-bottom:0}
+.contact-item > div:not(.ic){display:flex; flex-direction:column; gap:2px; min-width:0}
+.contact-item b{margin:0; color:var(--navy)}
+.contact-item span{display:block; overflow-wrap:anywhere}
+#contactForm{display:flex; flex-direction:column; justify-content:space-between; gap:0; padding:clamp(20px,3vw,32px); border:1px solid var(--grey); border-radius:18px; background:var(--bg)}
+#contactForm .form-field{margin-bottom:16px}
+#contactForm .form-field input,#contactForm .form-field textarea{background:#fff}
+#contactForm textarea{min-height:120px}
+#contactForm .btn{margin-top:auto}
+.contact-map{grid-column:1/-1; border-radius:18px; overflow:hidden; border:1px solid var(--grey)}
+.contact-map .contact-map-head{margin:0; padding:14px 18px; background:var(--navy-soft); border:0; border-radius:0; border-bottom:1px solid var(--grey)}
+.contact-map iframe{display:block; width:100%; height:clamp(240px,32vw,340px); border:0}
+.contact-map > a{display:flex; align-items:center; justify-content:center; gap:8px; padding:13px}
+@media(max-width:1024px){ .contact-info > p{max-width:none} }
+@media(max-width:640px){
+  .contact-grid{padding:20px!important; gap:24px!important}
+  .contact-info .contact-item{padding:12px 14px}
+  #contactForm{padding:18px}
+  .form-row{grid-template-columns:1fr!important}
+}
 </style>
 </head>
 <body>
@@ -879,19 +907,22 @@ img,video,iframe{max-width:100%}
     <div id="adminLoginModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;">
       <div style="background:#fff;border-radius:16px;padding:32px;max-width:360px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);">
         <h3 style="font-family:Poppins,sans-serif;color:#0A2E6E;margin-bottom:6px;">Admin Access</h3>
-        <p style="color:#888;font-size:.85rem;margin-bottom:20px;">Enter admin password to manage blog posts.</p>
-        <input id="adminPwInput" type="password" placeholder="Admin password" style="width:100%;padding:12px 14px;border:1.5px solid rgba(10,46,110,.2);border-radius:8px;font-size:.9rem;margin-bottom:14px;" onkeydown="if(event.key==='Enter')checkAdminLogin()">
+        <p style="color:#888;font-size:.85rem;margin-bottom:20px;">Sign in with your admin account to manage blog posts.</p>
+        <input id="adminEmailInput" type="email" autocomplete="username" placeholder="Admin email" style="width:100%;padding:12px 14px;border:1.5px solid rgba(10,46,110,.2);border-radius:8px;font-size:.9rem;margin-bottom:10px;" onkeydown="if(event.key==='Enter')document.getElementById('adminPwInput').focus()">
+        <input id="adminPwInput" type="password" autocomplete="current-password" placeholder="Password" style="width:100%;padding:12px 14px;border:1.5px solid rgba(10,46,110,.2);border-radius:8px;font-size:.9rem;margin-bottom:14px;" onkeydown="if(event.key==='Enter')checkAdminLogin()">
         <div style="display:flex;gap:10px;">
-          <button onclick="checkAdminLogin()" style="flex:1;background:#0A2E6E;color:#fff;padding:11px;border-radius:8px;border:none;font-family:Poppins,sans-serif;font-weight:600;cursor:pointer;">Login</button>
+          <button id="adminLoginBtn" onclick="checkAdminLogin()" style="flex:1;background:#0A2E6E;color:#fff;padding:11px;border-radius:8px;border:none;font-family:Poppins,sans-serif;font-weight:600;cursor:pointer;">Login</button>
           <button onclick="document.getElementById('adminLoginModal').style.display='none'" style="flex:1;background:#f1f3f5;color:#333;padding:11px;border-radius:8px;border:none;font-family:Poppins,sans-serif;font-weight:600;cursor:pointer;">Cancel</button>
         </div>
-        <div id="adminLoginErr" style="color:#c00;font-size:.8rem;margin-top:10px;display:none;">Incorrect password. Try again.</div>
+        <div id="adminLoginErr" style="color:#c00;font-size:.8rem;margin-top:10px;display:none;">Login failed.</div>
       </div>
     </div>
     <!-- Blog Admin Panel -->
     <div id="blogAdminPanel" style="display:none;margin-top:24px;background:#f8f9fb;border-radius:16px;padding:28px;border:1.5px solid rgba(10,46,110,.1);">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
         <h3 style="font-family:Poppins,sans-serif;color:#0A2E6E;font-size:1rem;margin:0;">Add New Blog Post</h3>
+        <span id="ba-who" style="font-size:.78rem;color:#888;margin-left:auto;"></span>
+        <button onclick="adminLogout()" style="background:#fff;border:1.5px solid rgba(10,46,110,.2);color:#0A2E6E;padding:6px 14px;border-radius:8px;font-size:.78rem;font-family:Poppins,sans-serif;font-weight:600;cursor:pointer;">Log out</button>
         <button onclick="document.getElementById('blogAdminPanel').style.display='none'" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:#888;">✕</button>
       </div>
       <div style="display:grid;gap:14px;">
@@ -943,19 +974,6 @@ img,video,iframe{max-width:100%}
           <div><b>Visit online</b><span>docufastindia.com</span></div>
         </div>
 
-        <!-- Map -->
-        <div class="contact-map" style="margin-top:24px;border-radius:14px;overflow:hidden;border:2px solid rgba(10,46,110,.1);">
-          <div class="contact-item" style="margin-bottom:0;padding:14px 16px;background:rgba(10,46,110,.04);border-bottom:1px solid rgba(10,46,110,.08);">
-            <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#0A2E6E"/></svg></div>
-            <div><b>Visit us</b><span>Mahabubnagar, Telangana, India</span></div>
-          </div>
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4701.228715692648!2d78.00242167590157!3d16.742755521053333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bca29d8522cd343%3A0xfc45d894f51ae834!2sDocufast%20India!5e1!3m2!1sen!2sin!4v1793967074186!5m2!1sen!2sin" width="100%" height="240" style="border:0;display:block;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" title="DocuFast India Location"></iframe>
-          <a href="https://maps.app.goo.gl/mmoONtf4QorM6DP86" target="_blank" rel="noopener noreferrer"
-             style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;background:#0A2E6E;color:#fff;font-size:13px;font-weight:600;text-decoration:none;font-family:'Poppins',sans-serif;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Open in Google Maps
-          </a>
-        </div>
       </div>
 
       <form id="contactForm" onsubmit="return handleForm(event)">
@@ -972,6 +990,20 @@ img,video,iframe{max-width:100%}
         <div class="form-field"><label>Message</label><textarea rows="4" placeholder="Tell us what you need help with"></textarea></div>
         <button type="submit" class="btn btn-primary" style="width:100%;" onclick="ripple(event)">Submit Application</button>
       </form>
+
+      <!-- Map -->
+      <div class="contact-map">
+        <div class="contact-item contact-map-head">
+          <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#0A2E6E"/></svg></div>
+          <div><b>Visit us</b><span>Mahabubnagar, Telangana, India</span></div>
+        </div>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4701.228715692648!2d78.00242167590157!3d16.742755521053333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bca29d8522cd343%3A0xfc45d894f51ae834!2sDocufast%20India!5e1!3m2!1sen!2sin!4v1793967074186!5m2!1sen!2sin" width="100%" height="240" style="border:0;display:block;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" title="DocuFast India Location"></iframe>
+        <a href="https://maps.app.goo.gl/mmoONtf4QorM6DP86" target="_blank" rel="noopener noreferrer"
+           style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;background:#0A2E6E;color:#fff;font-size:13px;font-weight:600;text-decoration:none;font-family:'Poppins',sans-serif;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Open in Google Maps
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -1228,21 +1260,57 @@ function showToast(msg, bg){
 
 
 // ── SUPABASE CONFIG ──
+// The anon key is public by design. Security comes from Row Level Security + Supabase Auth
+// (see supabase/blog_admin_setup.sql). No admin password lives in this file.
 const SB_URL = 'https://chqennbbwkyhmemfubtj.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNocWVubmJid2t5aG1lbWZ1YnRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxNjY3NDAsImV4cCI6MjEwODc0Mjc0MH0.SDpg_abhMEO4lNmeOUguSFteEt3kecDu-7SxdfwbKSU';
-const ADMIN_PASSWORD = 'docufast2026';
+
+function esc(v){
+  return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ── Admin session (Supabase Auth, kept for this browser tab only) ──
+function getSession(){ try { return JSON.parse(sessionStorage.getItem('dfSession') || 'null'); } catch(e){ return null; } }
+function setSession(v){ try { v ? sessionStorage.setItem('dfSession', JSON.stringify(v)) : sessionStorage.removeItem('dfSession'); } catch(e){} }
+function isAdminSession(){ const s = getSession(); return !!(s && s.access_token); }
+
+async function authRequest(grant, body){
+  const r = await fetch(SB_URL + '/auth/v1/token?grant_type=' + grant, {
+    method: 'POST',
+    headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error_description || j.msg || 'Login failed');
+  return {
+    access_token: j.access_token,
+    refresh_token: j.refresh_token,
+    expires_at: Math.floor(Date.now()/1000) + (j.expires_in || 3600),
+    email: (j.user && j.user.email) || ''
+  };
+}
+
+async function getToken(){
+  let s = getSession();
+  if (!s) return null;
+  if (s.expires_at - 30 < Date.now()/1000) {
+    try { s = await authRequest('refresh_token', { refresh_token: s.refresh_token }); setSession(s); }
+    catch(e){ setSession(null); return null; }
+  }
+  return s.access_token;
+}
 
 async function sbFetch(path, options={}) {
-  const res = await fetch(SB_URL + '/rest/v1/' + path, {
-    ...options,
-    headers: {
-      'apikey': SB_KEY,
-      'Authorization': 'Bearer ' + SB_KEY,
-      'Content-Type': 'application/json',
-      'Prefer': options.method === 'POST' ? 'return=representation' : undefined,
-      ...options.headers
-    }
-  });
+  const token = await getToken();
+  const headers = {
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer ' + (token || SB_KEY),
+    'Content-Type': 'application/json'
+  };
+  if (options.method === 'POST') headers['Prefer'] = 'return=representation';
+  Object.assign(headers, options.headers || {});
+  const { headers: _ignored, ...rest } = options;
+  const res = await fetch(SB_URL + '/rest/v1/' + path, { ...rest, headers });
   if (!res.ok) throw new Error(await res.text());
   const text = await res.text();
   return text ? JSON.parse(text) : null;
@@ -1260,14 +1328,14 @@ async function renderBlogGrid() {
       return;
     }
     grid.innerHTML = data.map((p, i) => `
-      <article class="blog-card" style="--i:${i%3};cursor:pointer;" onclick="openPost('${p.id}')">
+      <article class="blog-card" style="--i:${i%3};cursor:pointer;" onclick="openPost('${esc(p.id)}')">
         <div class="blog-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><rect x="4" y="3" width="16" height="18" rx="2" stroke-width="1.4"/><path d="M8 8h8M8 12h8M8 16h5" stroke-width="1.4" stroke-linecap="round"/></svg></div>
         <div class="blog-body">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-            <span class="blog-tag">${p.tag}</span>
-            ${sessionStorage.getItem('dfAdmin')==='1'?`<button onclick="event.stopPropagation();deleteBlogPost('${p.id}')" style="margin-left:auto;background:rgba(220,0,0,.1);color:#c00;border:none;padding:3px 10px;border-radius:6px;font-size:.7rem;cursor:pointer;">✕ Delete</button>`:''}</div>
-          <h3>${p.title}</h3>
-          <p>${p.excerpt}</p>
+            <span class="blog-tag">${esc(p.tag)}</span>
+            ${isAdminSession()?`<button onclick="event.stopPropagation();deleteBlogPost('${esc(p.id)}')" style="margin-left:auto;background:rgba(220,0,0,.1);color:#c00;border:none;padding:3px 10px;border-radius:6px;font-size:.7rem;cursor:pointer;">✕ Delete</button>`:''}</div>
+          <h3>${esc(p.title)}</h3>
+          <p>${esc(p.excerpt)}</p>
           <div class="blog-meta">
             <span>${new Date(p.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</span>
             <span class="blog-read">Read more →</span>
@@ -1289,13 +1357,13 @@ async function openPost(id) {
     modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;';
     modal.innerHTML = `<div style="background:#fff;border-radius:16px;padding:clamp(20px,5vw,40px);max-width:720px;width:100%;margin:auto;position:relative;">
       <button onclick="this.closest('[style]').remove()" style="position:absolute;top:16px;right:16px;border:none;background:#f1f3f5;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
-      <span style="background:rgba(10,46,110,.08);color:#0A2E6E;font-size:.72rem;font-weight:700;padding:4px 12px;border-radius:50px;font-family:Poppins,sans-serif;letter-spacing:.04em;">${p.tag}</span>
-      <h2 style="font-family:Poppins,sans-serif;color:#0A2E6E;margin:14px 0 8px;font-size:clamp(1.2rem,3vw,1.6rem);line-height:1.3;">${p.title}</h2>
+      <span style="background:rgba(10,46,110,.08);color:#0A2E6E;font-size:.72rem;font-weight:700;padding:4px 12px;border-radius:50px;font-family:Poppins,sans-serif;letter-spacing:.04em;">${esc(p.tag)}</span>
+      <h2 style="font-family:Poppins,sans-serif;color:#0A2E6E;margin:14px 0 8px;font-size:clamp(1.2rem,3vw,1.6rem);line-height:1.3;">${esc(p.title)}</h2>
       <div style="color:#888;font-size:.82rem;margin-bottom:24px;display:flex;gap:12px;flex-wrap:wrap;">
         <span>📅 ${new Date(p.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</span>
-        <span>✍️ ${p.author}</span>
+        <span>✍️ ${esc(p.author)}</span>
       </div>
-      <div style="color:#333;line-height:1.85;font-size:.97rem;white-space:pre-wrap;">${p.content || p.excerpt}</div>
+      <div style="color:#333;line-height:1.85;font-size:.97rem;white-space:pre-wrap;">${esc(p.content || p.excerpt)}</div>
       <div style="margin-top:28px;padding-top:20px;border-top:1px solid #eee;text-align:center;">
         <p style="color:#666;font-size:.88rem;margin-bottom:14px;">Need help with documents? DocuFast India is here for you.</p>
         <a href="tel:08542355200" style="background:#0A2E6E;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-family:Poppins,sans-serif;font-weight:600;font-size:.9rem;">📞 Call 08542-355200</a>
@@ -1314,30 +1382,54 @@ async function deleteBlogPost(id) {
   } catch(e) { alert('Delete failed: ' + e.message); }
 }
 
-function showAdminLogin() {
-  if (sessionStorage.getItem('dfAdmin') === '1') {
-    document.getElementById('blogAdminPanel').style.display = 'block';
-    document.getElementById('blogAdminPanel').scrollIntoView({behavior:'smooth',block:'start'});
-    return;
-  }
-  const modal = document.getElementById('adminLoginModal');
-  modal.style.display = 'flex';
-  setTimeout(() => document.getElementById('adminPwInput').focus(), 100);
+function showAdminPanel() {
+  const panel = document.getElementById('blogAdminPanel');
+  panel.style.display = 'block';
+  const who = document.getElementById('ba-who');
+  const sess = getSession();
+  if (who && sess) who.textContent = sess.email ? 'Signed in as ' + sess.email : '';
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-function checkAdminLogin() {
+function showAdminLogin() {
+  if (isAdminSession()) { showAdminPanel(); return; }
+  const modal = document.getElementById('adminLoginModal');
+  modal.style.display = 'flex';
+  setTimeout(() => document.getElementById('adminEmailInput').focus(), 100);
+}
+
+async function checkAdminLogin() {
+  const email = document.getElementById('adminEmailInput').value.trim();
   const pw = document.getElementById('adminPwInput').value;
-  if (pw === ADMIN_PASSWORD) {
-    sessionStorage.setItem('dfAdmin', '1');
+  const err = document.getElementById('adminLoginErr');
+  const btn = document.getElementById('adminLoginBtn');
+  err.style.display = 'none';
+  if (!email || !pw) { err.textContent = 'Enter your admin email and password.'; err.style.display = 'block'; return; }
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  try {
+    const sess = await authRequest('password', { email, password: pw });
+    setSession(sess);
+    // Confirm this account is really an admin (the database enforces it too)
+    const ok = await sbFetch('rpc/is_admin', { method: 'POST', body: '{}' });
+    if (ok !== true) { setSession(null); throw new Error('This account does not have admin access.'); }
     document.getElementById('adminLoginModal').style.display = 'none';
     document.getElementById('adminPwInput').value = '';
-    document.getElementById('blogAdminPanel').style.display = 'block';
-    document.getElementById('blogAdminPanel').scrollIntoView({behavior:'smooth',block:'start'});
+    showAdminPanel();
     renderBlogGrid(); // re-render to show delete buttons
-  } else {
-    document.getElementById('adminLoginErr').style.display = 'block';
+  } catch(e) {
+    setSession(null);
+    err.textContent = (e.message && e.message.length < 140) ? e.message : 'Login failed. Please try again.';
+    err.style.display = 'block';
     document.getElementById('adminPwInput').value = '';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Login';
   }
+}
+
+function adminLogout() {
+  setSession(null);
+  document.getElementById('blogAdminPanel').style.display = 'none';
+  renderBlogGrid();
 }
 
 async function saveBlogPost() {
