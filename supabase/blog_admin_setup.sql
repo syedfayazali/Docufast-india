@@ -1,6 +1,6 @@
 -- DocuFast India — secure blog admin setup
--- Run this ONCE in the Supabase project the website uses:
---   chqennbbwkyhmemfubtj  →  SQL Editor → New query → paste → Run
+-- Already applied to the Supabase project docufast-blog (nwwmdglqdqoupmefwbbl).
+-- Kept here for reference / re-creating the project. To re-run: SQL Editor → New query → paste → Run
 --
 -- Result: everyone can READ published posts; only accounts listed in public.admins
 -- (signed in via Supabase Auth) can create, edit, delete or see drafts.

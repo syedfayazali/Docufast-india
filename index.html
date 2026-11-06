@@ -1262,8 +1262,8 @@ function showToast(msg, bg){
 // ── SUPABASE CONFIG ──
 // The anon key is public by design. Security comes from Row Level Security + Supabase Auth
 // (see supabase/blog_admin_setup.sql). No admin password lives in this file.
-const SB_URL = 'https://chqennbbwkyhmemfubtj.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNocWVubmJid2t5aG1lbWZ1YnRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxNjY3NDAsImV4cCI6MjEwODc0Mjc0MH0.SDpg_abhMEO4lNmeOUguSFteEt3kecDu-7SxdfwbKSU';
+const SB_URL = 'https://nwwmdglqdqoupmefwbbl.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53d21kZ2xxZHFvdXBtZWZ3YmJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM5NjM0MTksImV4cCI6MjEwOTUzOTQxOX0.Y8_sPJaXLVLutL7zHpMUCIVA--eQOKGyigZ7LxrH6OE';
 
 function esc(v){
   return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
