@@ -569,6 +569,47 @@
     .contact-grid{grid-template-columns:1fr!important}
     .footer-grid{grid-template-columns:1fr!important}
   }
+
+/* ── GLOBAL RESPONSIVE FIX ── */
+*{box-sizing:border-box}
+img,video,iframe{max-width:100%}
+.container{width:100%;max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,48px)}
+
+/* Desktop large */
+@media(min-width:1400px){
+  .container{max-width:1280px}
+  body{font-size:16px}
+}
+/* Tablet */
+@media(max-width:1024px){
+  .hero-grid,.why-grid,.contact-grid{grid-template-columns:1fr!important}
+  .services-grid{grid-template-columns:repeat(3,1fr)!important}
+  .blog-grid{grid-template-columns:repeat(2,1fr)!important}
+  .steps-grid{grid-template-columns:repeat(2,1fr)!important}
+  .footer-grid{grid-template-columns:1fr 1fr!important}
+}
+/* Mobile */
+@media(max-width:640px){
+  h1,h2{font-size:clamp(1.5rem,6vw,2.2rem)!important}
+  .services-grid{grid-template-columns:1fr 1fr!important}
+  .blog-grid{grid-template-columns:1fr!important}
+  .steps-grid{grid-template-columns:1fr 1fr!important}
+  .footer-grid{grid-template-columns:1fr!important}
+  .nav-inner{padding:10px 16px!important;border-radius:0!important}
+  .pill-cards{flex-wrap:wrap!important}
+  .pill-card{min-width:calc(50% - 8px)!important}
+  .review-card{min-width:260px!important}
+  .contact-grid{grid-template-columns:1fr!important}
+  .coverage-inner{flex-direction:column!important}
+}
+@media(max-width:420px){
+  .services-grid{grid-template-columns:1fr!important}
+  .steps-grid{grid-template-columns:1fr!important}
+  .pill-card{min-width:100%!important}
+  .hero-actions{flex-direction:column!important}
+  .hero-actions .btn{width:100%!important;text-align:center!important}
+}
+
 </style>
 </head>
 <body>
@@ -830,20 +871,38 @@
       <p>Guides and news on passports, identity documents, and government processes.</p>
     </div>
     <div class="blog-grid stagger" id="blogGrid"></div>
-    <!-- Blog Admin Panel (password protected) -->
+    <!-- Blog Admin Button -->
     <div style="text-align:center;margin-top:40px;">
-      <button onclick="toggleBlogAdmin()" style="background:none;border:1.5px dashed rgba(10,46,110,.25);color:#0A2E6E;padding:8px 20px;border-radius:8px;font-size:12px;font-family:'Poppins',sans-serif;cursor:pointer;opacity:.6;">+ Add Blog Post</button>
+      <button id="adminToggleBtn" onclick="showAdminLogin()" style="background:none;border:1.5px dashed rgba(10,46,110,.25);color:#0A2E6E;padding:8px 20px;border-radius:8px;font-size:12px;font-family:Poppins,sans-serif;cursor:pointer;opacity:.6;">+ Add Blog Post (Admin)</button>
     </div>
-    <div id="blogAdmin" style="display:none;margin-top:24px;background:#f8f9fb;border-radius:14px;padding:28px;border:1.5px solid rgba(10,46,110,.1);">
-      <h3 style="font-family:'Poppins',sans-serif;color:#0A2E6E;margin-bottom:20px;font-size:1rem;">Add New Blog Post</h3>
+    <!-- Login Modal -->
+    <div id="adminLoginModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;">
+      <div style="background:#fff;border-radius:16px;padding:32px;max-width:360px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);">
+        <h3 style="font-family:Poppins,sans-serif;color:#0A2E6E;margin-bottom:6px;">Admin Access</h3>
+        <p style="color:#888;font-size:.85rem;margin-bottom:20px;">Enter admin password to manage blog posts.</p>
+        <input id="adminPwInput" type="password" placeholder="Admin password" style="width:100%;padding:12px 14px;border:1.5px solid rgba(10,46,110,.2);border-radius:8px;font-size:.9rem;margin-bottom:14px;" onkeydown="if(event.key==='Enter')checkAdminLogin()">
+        <div style="display:flex;gap:10px;">
+          <button onclick="checkAdminLogin()" style="flex:1;background:#0A2E6E;color:#fff;padding:11px;border-radius:8px;border:none;font-family:Poppins,sans-serif;font-weight:600;cursor:pointer;">Login</button>
+          <button onclick="document.getElementById('adminLoginModal').style.display='none'" style="flex:1;background:#f1f3f5;color:#333;padding:11px;border-radius:8px;border:none;font-family:Poppins,sans-serif;font-weight:600;cursor:pointer;">Cancel</button>
+        </div>
+        <div id="adminLoginErr" style="color:#c00;font-size:.8rem;margin-top:10px;display:none;">Incorrect password. Try again.</div>
+      </div>
+    </div>
+    <!-- Blog Admin Panel -->
+    <div id="blogAdminPanel" style="display:none;margin-top:24px;background:#f8f9fb;border-radius:16px;padding:28px;border:1.5px solid rgba(10,46,110,.1);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+        <h3 style="font-family:Poppins,sans-serif;color:#0A2E6E;font-size:1rem;margin:0;">Add New Blog Post</h3>
+        <button onclick="document.getElementById('blogAdminPanel').style.display='none'" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:#888;">✕</button>
+      </div>
       <div style="display:grid;gap:14px;">
-        <input id="ba-title" type="text" placeholder="Post title *" style="padding:12px 14px;border:1.5px solid rgba(10,46,110,.15);border-radius:8px;font-size:.9rem;width:100%;font-family:'Inter',sans-serif;">
-        <input id="ba-tag" type="text" placeholder="Category (e.g. Passport, PAN, Tips)" style="padding:12px 14px;border:1.5px solid rgba(10,46,110,.15);border-radius:8px;font-size:.9rem;width:100%;font-family:'Inter',sans-serif;">
-        <textarea id="ba-excerpt" rows="3" placeholder="Short description / excerpt *" style="padding:12px 14px;border:1.5px solid rgba(10,46,110,.15);border-radius:8px;font-size:.9rem;width:100%;font-family:'Inter',sans-serif;resize:vertical;"></textarea>
-        <textarea id="ba-content" rows="6" placeholder="Full post content (supports line breaks)" style="padding:12px 14px;border:1.5px solid rgba(10,46,110,.15);border-radius:8px;font-size:.9rem;width:100%;font-family:'Inter',sans-serif;resize:vertical;"></textarea>
+        <input id="ba-title" type="text" placeholder="Post title *" style="padding:12px 14px;border:1.5px solid rgba(10,46,110,.15);border-radius:8px;font-size:.9rem;width:100%;font-family:Inter,sans-serif;">
+        <input id="ba-tag" type="text" placeholder="Category (e.g. Passport, PAN, Tips)" style="padding:12px 14px;border:1.5px solid rgba(10,46,110,.15);border-radius:8px;font-size:.9rem;width:100%;font-family:Inter,sans-serif;">
+        <textarea id="ba-excerpt" rows="3" placeholder="Short description shown on blog card *" style="padding:12px 14px;border:1.5px solid rgba(10,46,110,.15);border-radius:8px;font-size:.9rem;width:100%;font-family:Inter,sans-serif;resize:vertical;"></textarea>
+        <textarea id="ba-content" rows="8" placeholder="Full post content (supports line breaks for paragraphs)" style="padding:12px 14px;border:1.5px solid rgba(10,46,110,.15);border-radius:8px;font-size:.9rem;width:100%;font-family:Inter,sans-serif;resize:vertical;"></textarea>
+        <div id="ba-status" style="display:none;padding:10px 14px;border-radius:8px;font-size:.85rem;"></div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;">
-          <button onclick="saveBlogPost()" style="background:#0A2E6E;color:#fff;padding:11px 24px;border-radius:8px;border:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:.88rem;cursor:pointer;">Publish Post</button>
-          <button onclick="document.getElementById('blogAdmin').style.display='none'" style="background:#fff;color:#0A2E6E;padding:11px 24px;border-radius:8px;border:1.5px solid rgba(10,46,110,.2);font-family:'Poppins',sans-serif;font-weight:600;font-size:.88rem;cursor:pointer;">Cancel</button>
+          <button id="ba-submit" onclick="saveBlogPost()" style="background:#0A2E6E;color:#fff;padding:11px 28px;border-radius:8px;border:none;font-family:Poppins,sans-serif;font-weight:600;font-size:.88rem;cursor:pointer;">Publish Post</button>
+          <button onclick="document.getElementById('blogAdminPanel').style.display='none'" style="background:#fff;color:#0A2E6E;padding:11px 24px;border-radius:8px;border:1.5px solid rgba(10,46,110,.2);font-family:Poppins,sans-serif;font-weight:600;font-size:.88rem;cursor:pointer;">Cancel</button>
         </div>
       </div>
     </div>
@@ -1084,38 +1143,8 @@ const posts = [
   {tag:'Identity Documents', title:'Voter ID vs Aadhaar: which proof of address works where', d:'Understand which identity document to use for different needs.', date:'May 2, 2026', read:'3 min read'},
   {tag:'Document Guides', title:'Driving licence renewal: documents you actually need', d:'A simplified list to avoid repeat visits and delays.', date:'Apr 22, 2026', read:'4 min read'},
 ];
-// Render blog with localStorage + default posts
-function renderBlogGrid(){
-  let lsPosts=[];
-  try{lsPosts=JSON.parse(localStorage.getItem('dfBlogPosts')||'[]');}catch(e){}
-  const lsCards=lsPosts.map((p,i)=>`
-    <article class="blog-card" style="--i:0;position:relative;">
-      <div class="blog-thumb" style="background:linear-gradient(135deg,#F5A623,#e8961a)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><rect x="4" y="3" width="16" height="18" rx="2" stroke-width="1.4"/><path d="M8 8h8M8 12h8M8 16h5" stroke-width="1.4" stroke-linecap="round"/></svg></div>
-      <div class="blog-body">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-          <span class="blog-tag">${p.tag}</span>
-          <button onclick="deleteBlogPost(${i})" style="margin-left:auto;background:rgba(220,0,0,.1);color:#c00;border:none;padding:3px 10px;border-radius:6px;font-size:.7rem;cursor:pointer;font-family:inherit;">✕ Delete</button>
-        </div>
-        <h3 style="cursor:pointer;" onclick="openPost(${i})">${p.title}</h3>
-        <p>${p.excerpt}</p>
-        <div class="blog-meta"><span>${p.date}</span><span class="blog-read" onclick="openPost(${i})" style="cursor:pointer;">Read more →</span></div>
-      </div>
-    </article>`).join('');
-  const defaultCards=posts.map((p,i)=>`
-    <article class="blog-card reveal" style="--i:${i%3}">
-      <div class="blog-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><rect x="4" y="3" width="16" height="18" rx="2" stroke-width="1.4"/><path d="M8 8h8M8 12h8M8 16h5" stroke-width="1.4" stroke-linecap="round"/></svg></div>
-      <div class="blog-body">
-        <span class="blog-tag">${p.tag}</span>
-        <h3>${p.title}</h3>
-        <p>${p.d}</p>
-        <div class="blog-meta"><span>${p.date}</span><span>${p.read}</span></div>
-      </div>
-    </article>`).join('');
-  document.getElementById('blogGrid').innerHTML=lsCards+defaultCards;
-  document.querySelectorAll('#blogGrid .reveal').forEach(el=>io.observe(el));
-}
-renderBlogGrid();
-document.querySelectorAll('#blogGrid .reveal').forEach(el=>io.observe(el));
+
+}document.querySelectorAll('#blogGrid .reveal').forEach(el=>io.observe(el));
 
 // ---------- FAQ ----------
 const faqs = [
@@ -1190,49 +1219,164 @@ function showToast(msg, bg){
 }
 
 // Blog admin
-function toggleBlogAdmin(){
-  const el=document.getElementById('blogAdmin');
-  el.style.display=el.style.display==='none'?'block':'none';
+
+
+
+
+
+
+// ── SUPABASE CONFIG ──
+const SB_URL = 'https://chqennbbwkyhmemfubtj.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNocWVubmJid2t5aG1lbWZ1YnRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxNjY3NDAsImV4cCI6MjEwODc0Mjc0MH0.SDpg_abhMEO4lNmeOUguSFteEt3kecDu-7SxdfwbKSU';
+const ADMIN_PASSWORD = 'docufast2026';
+
+async function sbFetch(path, options={}) {
+  const res = await fetch(SB_URL + '/rest/v1/' + path, {
+    ...options,
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': options.method === 'POST' ? 'return=representation' : undefined,
+      ...options.headers
+    }
+  });
+  if (!res.ok) throw new Error(await res.text());
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
 }
-function saveBlogPost(){
-  const title=document.getElementById('ba-title').value.trim();
-  const excerpt=document.getElementById('ba-excerpt').value.trim();
-  const content=document.getElementById('ba-content').value.trim();
-  const tag=document.getElementById('ba-tag').value.trim()||'General';
-  if(!title||!excerpt){alert('Title and description are required!');return;}
-  const posts=JSON.parse(localStorage.getItem('dfBlogPosts')||'[]');
-  posts.unshift({title,excerpt,content,tag,date:new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})});
-  localStorage.setItem('dfBlogPosts',JSON.stringify(posts));
-  document.getElementById('ba-title').value='';
-  document.getElementById('ba-excerpt').value='';
-  document.getElementById('ba-content').value='';
-  document.getElementById('ba-tag').value='';
-  document.getElementById('blogAdmin').style.display='none';
-  renderBlogGrid();
-  alert('Post published successfully!');
+
+// Load & render blog posts from Supabase
+async function renderBlogGrid() {
+  const grid = document.getElementById('blogGrid');
+  if (!grid) return;
+  grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#888;">Loading posts…</div>';
+  try {
+    const data = await sbFetch('blog_posts?select=*&published=eq.true&order=created_at.desc');
+    if (!data || data.length === 0) {
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#888;">No posts yet. Check back soon!</div>';
+      return;
+    }
+    grid.innerHTML = data.map((p, i) => `
+      <article class="blog-card" style="--i:${i%3};cursor:pointer;" onclick="openPost('${p.id}')">
+        <div class="blog-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><rect x="4" y="3" width="16" height="18" rx="2" stroke-width="1.4"/><path d="M8 8h8M8 12h8M8 16h5" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+        <div class="blog-body">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span class="blog-tag">${p.tag}</span>
+            ${sessionStorage.getItem('dfAdmin')==='1'?`<button onclick="event.stopPropagation();deleteBlogPost('${p.id}')" style="margin-left:auto;background:rgba(220,0,0,.1);color:#c00;border:none;padding:3px 10px;border-radius:6px;font-size:.7rem;cursor:pointer;">✕ Delete</button>`:''}</div>
+          <h3>${p.title}</h3>
+          <p>${p.excerpt}</p>
+          <div class="blog-meta">
+            <span>${new Date(p.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</span>
+            <span class="blog-read">Read more →</span>
+          </div>
+        </div>
+      </article>`).join('');
+    document.querySelectorAll('#blogGrid .blog-card').forEach(el => io && io.observe(el));
+  } catch(e) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#c00;">Error loading posts. Please refresh.</div>';
+  }
 }
-function deleteBlogPost(i){
-  if(!confirm('Delete this post?'))return;
-  const posts=JSON.parse(localStorage.getItem('dfBlogPosts')||'[]');
-  posts.splice(i,1);
-  localStorage.setItem('dfBlogPosts',JSON.stringify(posts));
-  renderBlog();
+
+async function openPost(id) {
+  try {
+    const data = await sbFetch(`blog_posts?id=eq.${id}&select=*`);
+    const p = data[0];
+    if (!p) return;
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;';
+    modal.innerHTML = `<div style="background:#fff;border-radius:16px;padding:clamp(20px,5vw,40px);max-width:720px;width:100%;margin:auto;position:relative;">
+      <button onclick="this.closest('[style]').remove()" style="position:absolute;top:16px;right:16px;border:none;background:#f1f3f5;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+      <span style="background:rgba(10,46,110,.08);color:#0A2E6E;font-size:.72rem;font-weight:700;padding:4px 12px;border-radius:50px;font-family:Poppins,sans-serif;letter-spacing:.04em;">${p.tag}</span>
+      <h2 style="font-family:Poppins,sans-serif;color:#0A2E6E;margin:14px 0 8px;font-size:clamp(1.2rem,3vw,1.6rem);line-height:1.3;">${p.title}</h2>
+      <div style="color:#888;font-size:.82rem;margin-bottom:24px;display:flex;gap:12px;flex-wrap:wrap;">
+        <span>📅 ${new Date(p.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</span>
+        <span>✍️ ${p.author}</span>
+      </div>
+      <div style="color:#333;line-height:1.85;font-size:.97rem;white-space:pre-wrap;">${p.content || p.excerpt}</div>
+      <div style="margin-top:28px;padding-top:20px;border-top:1px solid #eee;text-align:center;">
+        <p style="color:#666;font-size:.88rem;margin-bottom:14px;">Need help with documents? DocuFast India is here for you.</p>
+        <a href="tel:08542355200" style="background:#0A2E6E;color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-family:Poppins,sans-serif;font-weight:600;font-size:.9rem;">📞 Call 08542-355200</a>
+      </div>
+    </div>`;
+    modal.onclick = e => { if(e.target === modal) modal.remove(); };
+    document.body.appendChild(modal);
+  } catch(e) { alert('Could not load post. Please try again.'); }
 }
-function openPost(i){
-  const posts=JSON.parse(localStorage.getItem('dfBlogPosts')||'[]');
-  const p=posts[i];
-  if(!p)return;
-  const modal=document.createElement('div');
-  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
-  modal.innerHTML=`<div style="background:#fff;border-radius:16px;padding:36px;max-width:680px;width:100%;max-height:85vh;overflow-y:auto;position:relative;">
-    <button onclick="this.closest('[style]').remove()" style="position:absolute;top:16px;right:16px;border:none;background:none;font-size:1.4rem;cursor:pointer;color:#666;">✕</button>
-    <span style="background:rgba(10,46,110,.08);color:#0A2E6E;font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:50px;font-family:Poppins,sans-serif;letter-spacing:.04em;">${p.tag}</span>
-    <h2 style="font-family:Poppins,sans-serif;color:#0A2E6E;margin:14px 0 8px;font-size:1.4rem;">${p.title}</h2>
-    <div style="color:#888;font-size:.8rem;margin-bottom:20px;">${p.date}</div>
-    <div style="color:#333;line-height:1.75;white-space:pre-wrap;">${p.content||p.excerpt}</div>
-  </div>`;
-  document.body.appendChild(modal);
+
+async function deleteBlogPost(id) {
+  if (!confirm('Delete this post permanently?')) return;
+  try {
+    await sbFetch(`blog_posts?id=eq.${id}`, { method: 'DELETE' });
+    renderBlogGrid();
+  } catch(e) { alert('Delete failed: ' + e.message); }
 }
+
+function showAdminLogin() {
+  if (sessionStorage.getItem('dfAdmin') === '1') {
+    document.getElementById('blogAdminPanel').style.display = 'block';
+    document.getElementById('blogAdminPanel').scrollIntoView({behavior:'smooth',block:'start'});
+    return;
+  }
+  const modal = document.getElementById('adminLoginModal');
+  modal.style.display = 'flex';
+  setTimeout(() => document.getElementById('adminPwInput').focus(), 100);
+}
+
+function checkAdminLogin() {
+  const pw = document.getElementById('adminPwInput').value;
+  if (pw === ADMIN_PASSWORD) {
+    sessionStorage.setItem('dfAdmin', '1');
+    document.getElementById('adminLoginModal').style.display = 'none';
+    document.getElementById('adminPwInput').value = '';
+    document.getElementById('blogAdminPanel').style.display = 'block';
+    document.getElementById('blogAdminPanel').scrollIntoView({behavior:'smooth',block:'start'});
+    renderBlogGrid(); // re-render to show delete buttons
+  } else {
+    document.getElementById('adminLoginErr').style.display = 'block';
+    document.getElementById('adminPwInput').value = '';
+  }
+}
+
+async function saveBlogPost() {
+  const title = document.getElementById('ba-title').value.trim();
+  const excerpt = document.getElementById('ba-excerpt').value.trim();
+  const content = document.getElementById('ba-content').value.trim();
+  const tag = document.getElementById('ba-tag').value.trim() || 'General';
+  const status = document.getElementById('ba-status');
+  const btn = document.getElementById('ba-submit');
+
+  if (!title || !excerpt) { 
+    status.style.display='block';status.style.background='#fff3f3';status.style.color='#c00';
+    status.textContent='⚠ Title and description are required!'; return; 
+  }
+
+  btn.disabled = true; btn.textContent = 'Publishing…';
+  status.style.display = 'none';
+
+  try {
+    await sbFetch('blog_posts', {
+      method: 'POST',
+      body: JSON.stringify({ title, tag, excerpt, content, published: true })
+    });
+    document.getElementById('ba-title').value = '';
+    document.getElementById('ba-excerpt').value = '';
+    document.getElementById('ba-content').value = '';
+    document.getElementById('ba-tag').value = '';
+    status.style.display='block';status.style.background='#f0fff4';status.style.color='#0a7d3e';
+    status.textContent = '✅ Post published successfully!';
+    renderBlogGrid();
+    setTimeout(() => { document.getElementById('blogAdminPanel').style.display='none'; status.style.display='none'; }, 2000);
+  } catch(e) {
+    status.style.display='block';status.style.background='#fff3f3';status.style.color='#c00';
+    status.textContent = '❌ Failed to publish: ' + e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Publish Post';
+  }
+}
+
+// Initial load
+renderBlogGrid();
 
 </script>
 
