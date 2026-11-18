@@ -75,7 +75,7 @@ function Dashboard({ session }: { session: Session }) {
             <div className="stat"><b>{d.agents.filter((a) => a.enabled).length}/{d.agents.length}</b><span>Agents on duty</span></div>
           </div>
         )}
-        {view === 'office' && <Office agents={d.agents} approvals={d.approvals} onOpenAgent={setAgentId} onGoApprovals={() => go('approvals')} />}
+        {view === 'office' && <Office agents={d.agents} approvals={d.approvals} runs={d.runs} onOpenAgent={setAgentId} onGoApprovals={() => go('approvals')} />}
         {view === 'approvals' && <Approvals approvals={d.approvals} update={d.updateApproval} toast={toast} />}
         {view === 'social' && <Social history={d.history} />}
         {view === 'numbers' && <Numbers kpis={d.kpis} runs={d.runs} agents={d.agents} history={d.history} />}

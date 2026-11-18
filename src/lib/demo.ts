@@ -3,7 +3,7 @@ const now = Date.now();
 export const agents: Agent[] = [
   { id: 'pulse', name: 'Morning Pulse', role: 'Daily numbers', schedule: 'Daily 8:12 am', sort: 1, enabled: true, status: 'ok', current_task: null, started_at: null, last_run: new Date(now - 9 * 3600e3).toISOString(), last_summary: 'All sources read. Reach up 12%.' },
   { id: 'ops', name: 'App Ops Watch', role: 'App health', schedule: 'Daily 1:07 pm', sort: 2, enabled: true, status: 'running', current_task: 'Checking the print app', started_at: new Date(now - 60e3).toISOString(), last_run: null, last_summary: null },
-  { id: 'content', name: 'Content Studio', role: 'Reels', schedule: 'Mon–Sat 6:37 pm', sort: 3, enabled: true, status: 'idle', current_task: null, started_at: null, last_run: null, last_summary: null },
+  { id: 'content', name: 'Content Studio', role: 'Reels', schedule: 'Mon–Sat 6:37 pm', sort: 3, enabled: true, status: 'ok', current_task: null, started_at: null, last_run: new Date(now - 24 * 3600e3).toISOString(), last_summary: 'Drafted the PAN–Aadhaar reel.' },
   { id: 'replies', name: 'Reply Desk', role: 'Replies', schedule: 'Daily 8:41 pm', sort: 4, enabled: true, status: 'error', current_task: null, started_at: null, last_run: new Date(now - 20 * 3600e3).toISOString(), last_summary: 'Instagram comments could not be read.' },
   { id: 'growth', name: 'Growth Strategist', role: 'Weekly', schedule: 'Mondays 9:23 am', sort: 5, enabled: false, status: 'ok', current_task: null, started_at: null, last_run: new Date(now - 50 * 3600e3).toISOString(), last_summary: 'Weekly report ready.' },
 ];
