@@ -65,7 +65,13 @@
     "contactType": "customer service",
     "availableLanguage": ["English", "Telugu", "Hindi"]
   },
-  "hasMap": "https://maps.app.goo.gl/mmoONtf4QorM6DP86",
+  "hasMap": "https://www.google.com/maps?cid=18178173605229815860",
+  "openingHoursSpecification": [{
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+    "opens": "09:00",
+    "closes": "22:00"
+  }],
   "sameAs": [
     "https://www.facebook.com/docufast.india",
     "https://www.instagram.com/docufast.india",
@@ -957,10 +963,15 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
   <div class="container">
     <div class="sec-head reveal">
       <div class="eyebrow"><span class="dot"></span> Reviews</div>
-      <h2>Visited DocuFast India?</h2>
-      <p>We read every review. If we helped you, please tell others in Mahabubnagar on Google — it takes 30 seconds.</p>
-      <a href="https://maps.app.goo.gl/mmoONtf4QorM6DP86" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:22px;">Review us on Google</a>
+      <h2>Rated 5.0 on Google</h2>
+      <p>From customers in and around Mahabubnagar. Read them all on our Google profile.</p>
     </div>
+  </div>
+  <div class="review-track-wrap">
+    <div class="review-track" id="reviewTrack"></div>
+  </div>
+  <div class="container" style="text-align:center; margin-top:28px;">
+    <a href="https://www.google.com/maps?cid=18178173605229815860" target="_blank" rel="noopener" class="btn btn-primary">Read &amp; write reviews on Google</a>
   </div>
 </section>
 
@@ -1245,7 +1256,25 @@ document.getElementById('svcGrid').innerHTML = services.map((s,i)=>`
 document.querySelectorAll('#svcGrid .reveal').forEach(el=>io.observe(el));
 
 // ---------- Reviews ----------
-// Real Google reviews only. (Removed placeholder testimonials.)
+// Real Google reviews only — excerpts from our public Google Business Profile.
+const reviews = [
+  {n:'Syed M.', svc:'Udyam registration', t:'They helped me with my UDYAM Registration and completed the entire online process smoothly and professionally. Quick, hassle-free, and the communication was very good.'},
+  {n:'Abdul S.', svc:'Passport', t:'Got 5 passports done with DocuFast India, all from my home. Prompt service — recommended.'},
+  {n:'Mufezur R.', svc:'Passport', t:'Professional, friendly and very supportive throughout. They guided me at every step and ensured my passport application was completed accurately and on time.'},
+  {n:'Mohammad H.', svc:'Remote service', t:'Fast and effortless. Really liked the slot booking and remote service — no need to be physically present. Everything was well documented and professional.'},
+  {n:'Bhuvana C.', svc:'PVC card printing', t:'I have taken PVC card printing services; the way they deliver to their customer is excellent.'},
+  {n:'Muzammil A.', svc:'Voter ID', t:'Applied for voter IDs — quick service from the comfort of my home.'},
+];
+const reviewHTML = reviews.map(r=>`
+  <div class="review-card">
+    <div class="review-top">
+      <div class="avatar">${r.n.charAt(0)}</div>
+      <div><div class="review-name">${r.n}</div><div class="verified">Google review · ${r.svc}</div></div>
+    </div>
+    <div class="stars">★★★★★</div>
+    <p>${r.t}</p>
+  </div>`).join('');
+document.getElementById('reviewTrack').innerHTML = reviewHTML + reviewHTML;
 
 // ---------- Blog ----------
 
