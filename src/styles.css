@@ -242,6 +242,7 @@ textarea.edit{width:100%;min-height:160px;font-family:inherit;font-size:13.5px;l
 .chai{position:absolute;width:5.5cqw;height:5cqw;background:#7C2D12;border-radius:.5cqw;z-index:3;display:flex;align-items:flex-end;justify-content:center;padding-bottom:.4cqw;box-shadow:0 .4cqw 0 #431407}
 .chai b{font-size:.8cqw;color:#FDE68A;letter-spacing:.1em}
 .steam2{position:absolute;top:-1.6cqw;left:45%;width:.6cqw;height:1.4cqw;border-left:.2cqw solid rgba(255,255,255,.8);border-radius:50%;animation:steam 2s infinite}
+@keyframes steam{0%{opacity:0;transform:translateY(0)}40%{opacity:.9}100%{opacity:0;transform:translateY(-1.2cqw)}}
 .cooler{position:absolute;width:3cqw;height:5.5cqw;background:linear-gradient(180deg,#93C5FD 0 45%,#E5E7EB 45%);border-radius:1.4cqw 1.4cqw .4cqw .4cqw;z-index:3;box-shadow:0 .3cqw 0 #9CA3AF}
 .vending{position:absolute;width:4.2cqw;height:7cqw;background:linear-gradient(90deg,#DC2626 0 70%,#991B1B 70%);border-radius:.4cqw;z-index:3;box-shadow:inset 15% 0 0 rgba(255,255,255,.1)}
 .vending::after{content:'';position:absolute;left:10%;top:10%;width:50%;height:60%;background:repeating-linear-gradient(180deg,#FDE68A 0 18%,#F59E0B 18% 22%);border-radius:.2cqw}
