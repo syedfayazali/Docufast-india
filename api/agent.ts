@@ -1,6 +1,9 @@
-import { json } from '../server/auth.js';
+function json(body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
+}
 
-const URL_ = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '';
+
+const SB_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '';
 const ANON = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || '';
 
 /**
@@ -13,7 +16,7 @@ async function handler(req: Request): Promise<Response> {
   let body: { kind?: string; data?: unknown } = {};
   try { body = await req.json(); } catch { return json({ error: 'Send JSON: {"kind": "...", "data": {...}}' }, 400); }
   if (!token || !body.kind) return json({ error: 'Missing token or kind' }, 400);
-  const r = await fetch(`${URL_}/rest/v1/rpc/cr_agent_submit`, {
+  const r = await fetch(`${SB_URL}/rest/v1/rpc/cr_agent_submit`, {
     method: 'POST',
     headers: { apikey: ANON, authorization: `Bearer ${ANON}`, 'content-type': 'application/json' },
     body: JSON.stringify({ p_token: token, p_kind: body.kind, p_data: body.data ?? {} }),
