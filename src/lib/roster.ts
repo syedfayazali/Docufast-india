@@ -9,6 +9,8 @@ export const ROSTER: Record<string, RosterEntry> = {
   content: { shirt: '#DB2777', skin: '#D8A07A', hair: '#3F2A1E', days: [1, 2, 3, 4, 5, 6],    h: 18, m: 37, task: "Writing tomorrow's reel" },
   replies: { shirt: '#7C3AED', skin: '#B07450', hair: '#0F172A', days: [0, 1, 2, 3, 4, 5, 6], h: 20, m: 41, task: 'Drafting Instagram replies' },
   growth:  { shirt: '#16A34A', skin: '#C9915F', hair: '#4B3621', days: [1],                   h: 9,  m: 23, task: 'Preparing the weekly report' },
+  reviews: { shirt: '#F59E0B', skin: '#A86B47', hair: '#1C1917', days: [1, 2, 3, 4, 5, 6],    h: 10, m: 47, task: 'Chasing new Google reviews' },
+  radar:   { shirt: '#DC2626', skin: '#CF9A6E', hair: '#292524', days: [1, 4],                h: 11, m: 17, task: 'Scanning upcoming deadlines' },
 };
 
 export function nextRun(id: string): Date | null {

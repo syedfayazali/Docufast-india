@@ -13,13 +13,15 @@ const py = (y: number) => `${(y / H) * 100}%`;
 
 type Spot = { x: number; y: number; face?: 'up' | 'down' | 'left' | 'right' };
 const DESKS: Record<string, Spot> = {
-  pulse:   { x: 400, y: 200, face: 'up' },
-  ops:     { x: 560, y: 200, face: 'up' },
-  content: { x: 720, y: 200, face: 'up' },
-  replies: { x: 400, y: 450, face: 'up' },
-  growth:  { x: 560, y: 450, face: 'up' },
+  pulse:   { x: 400, y: 190, face: 'up' },
+  ops:     { x: 560, y: 190, face: 'up' },
+  content: { x: 720, y: 190, face: 'up' },
+  replies: { x: 400, y: 345, face: 'up' },
+  growth:  { x: 560, y: 345, face: 'up' },
+  reviews: { x: 720, y: 345, face: 'up' },
+  radar:   { x: 400, y: 500, face: 'up' },
 };
-const SPARE_DESK = { x: 720, y: 450 };
+const SPARE_DESK = { x: 560, y: 500 };
 const BREAK_SPOTS: Spot[] = [
   { x: 990, y: 185, face: 'up' },   // at the chai machine
   { x: 1060, y: 205, face: 'left' },// by the water cooler
@@ -30,7 +32,7 @@ const BREAK_SPOTS: Spot[] = [
 const RECEPTION_SPOTS: Spot[] = [{ x: 930, y: 610 }, { x: 980, y: 640 }, { x: 1030, y: 610 }, { x: 1080, y: 640 }, { x: 1130, y: 610 }];
 const MEETING_SPOT: Spot = { x: 150, y: 560, face: 'right' };
 
-const SHORT: Record<string, string> = { pulse: 'Pulse', ops: 'Ops', content: 'Content', replies: 'Replies', growth: 'Growth' };
+const SHORT: Record<string, string> = { pulse: 'Pulse', ops: 'Ops', content: 'Content', replies: 'Replies', growth: 'Growth', reviews: 'Reviews', radar: 'Radar' };
 
 const CHATTER = [
   'Chai is ready ☕', 'Printer ran out of A4 again 😅', 'Who left samosas in the fridge?',

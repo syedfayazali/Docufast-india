@@ -8,6 +8,7 @@ const TYPE_LABEL: Record<string, string> = {
   review_reply: 'Review reply', whatsapp: 'WhatsApp', pricing: 'Pricing', website: 'Website', app: 'App change',
   partner: 'Partner pitch', task: 'Task for you', alert: 'Alert', instagram_hide: 'Spam comment',
   gbp_update: 'Google profile', facebook_post: 'Facebook post', youtube_reply: 'YouTube reply',
+  deadline: 'Deadline', review_ask: 'Review request',
 };
 
 const PLATFORM: Record<string, string> = {
