@@ -1,5 +1,4 @@
-import type { Config } from '@netlify/functions';
-import { json, requireOwner, WINDSOR, windsorKey } from '../lib/auth';
+import { json, requireOwner, WINDSOR, windsorKey } from '../server/auth.js';
 
 type Q = { connector: string; fields: string[]; date_preset?: string; account?: string };
 const QUERIES: Record<string, Q> = {
@@ -41,9 +40,10 @@ async function pull(q: Q, key: string) {
   } finally { clearTimeout(t); }
 }
 
-export default async (req: Request) => {
+async function handler(req: Request): Promise<Response> {
   const auth = await requireOwner(req);
-  if ('error' in auth) return auth.error;
+  if ('error' in auth && auth.error) return auth.error;
+  if (!('sb' in auth) || !auth.sb) return json({ error: 'Not signed in' }, 401);
   const key = windsorKey();
   if (!key) return json({ error: 'WINDSOR_API_KEY is not set on the server' }, 500);
   const force = new URL(req.url).searchParams.get('refresh') === '1';
@@ -52,6 +52,6 @@ export default async (req: Request) => {
   const body = { fetchedAt: new Date().toISOString(), sources: Object.fromEntries(entries) };
   cache = { at: Date.now(), body };
   return json(body);
-};
+}
 
-export const config: Config = { path: '/api/social' };
+export const GET = handler;

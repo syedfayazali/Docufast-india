@@ -1,5 +1,4 @@
-import type { Config } from '@netlify/functions';
-import { json } from '../lib/auth';
+import { json } from '../server/auth.js';
 
 const URL_ = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '';
 const ANON = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || '';
@@ -8,7 +7,7 @@ const ANON = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY
  * Drafts inbox for agents that read public text (Reply Desk).
  * It forwards to one locked database function that can only add reply drafts and log the run.
  */
-export default async (req: Request) => {
+async function handler(req: Request): Promise<Response> {
   if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
   const token = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
   let body: { kind?: string; data?: unknown } = {};
@@ -26,6 +25,7 @@ export default async (req: Request) => {
     return json({ error: msg }, r.status === 401 || /not authorised/.test(msg) ? 401 : 400);
   }
   return new Response(text, { status: 200, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
-};
+}
 
-export const config: Config = { path: '/api/agent' };
+export const POST = handler;
+export const GET = handler;

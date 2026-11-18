@@ -1,5 +1,4 @@
-import type { Config } from '@netlify/functions';
-import { json, requireOwner, WINDSOR, windsorKey } from '../lib/auth';
+import { json, requireOwner, WINDSOR, windsorKey } from '../server/auth.js';
 
 const ACCOUNTS = {
   instagram: '17841424387462405',
@@ -53,10 +52,11 @@ function plan(type: string, body: string, m: Meta): Plan | string {
   }
 }
 
-export default async (req: Request) => {
+async function handler(req: Request): Promise<Response> {
   if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
   const auth = await requireOwner(req);
-  if ('error' in auth) return auth.error;
+  if ('error' in auth && auth.error) return auth.error;
+  if (!('sb' in auth) || !auth.sb) return json({ error: 'Not signed in' }, 401);
   const key = windsorKey();
   if (!key) return json({ error: 'The Windsor.ai key is not set on the server yet' }, 500);
 
@@ -89,6 +89,7 @@ export default async (req: Request) => {
   const when = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
   await auth.sb.from('cr_approvals').update({ status: 'done', result: `${p.label} · ${when}`, meta: { ...meta, publishedAt: new Date().toISOString() }, decided_at: new Date().toISOString() }).eq('id', id);
   return json({ ok: true, message: p.label });
-};
+}
 
-export const config: Config = { path: '/api/publish' };
+export const POST = handler;
+export const GET = handler;
