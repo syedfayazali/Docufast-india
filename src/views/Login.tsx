@@ -10,6 +10,8 @@ const G = () => (
   </svg>
 );
 
+const GOOGLE_ON = import.meta.env.VITE_GOOGLE_LOGIN === 'on';
+
 export default function Login({ denied }: { denied?: string | null }) {
   const [email, setEmail] = useState('');
   const [busy, setBusy] = useState(false);
@@ -37,10 +39,12 @@ export default function Login({ denied }: { denied?: string | null }) {
         <div className="mark">DF</div>
         <h1>DocuFast Control Room</h1>
         <p>Your agents work around the clock. Sign in to see what they did and approve their drafts.</p>
-        <button className="gbtn" onClick={google} disabled={busy}><G /> Continue with Google</button>
-        <div className="or">or</div>
+        {GOOGLE_ON && <>
+          <button className="gbtn" onClick={google} disabled={busy}><G /> Continue with Google</button>
+          <div className="or">or</div>
+        </>}
         <form onSubmit={magic}>
-          <input className="field" type="email" autoComplete="email" placeholder="Your email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input className="field" type="email" autoComplete="email" placeholder="docufast.india@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} />
           <button className="btn go" style={{ width: '100%', justifyContent: 'center', padding: 12, borderRadius: 12 }} disabled={busy}>Email me a sign-in link</button>
         </form>
         {msg && <div className={`login-msg ${msg.ok ? 'ok' : 'err'}`}>{msg.text}</div>}
