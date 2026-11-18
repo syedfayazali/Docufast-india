@@ -1,5 +1,5 @@
 import type { Config } from '@netlify/functions';
-import { json, requireOwner, WINDSOR, windsorKey } from './_auth';
+import { json, requireOwner, WINDSOR, windsorKey } from '../lib/auth';
 
 const ACCOUNTS = {
   instagram: '17841424387462405',

@@ -1,5 +1,5 @@
 import type { Config } from '@netlify/functions';
-import { json, requireOwner, WINDSOR, windsorKey } from './_auth';
+import { json, requireOwner, WINDSOR, windsorKey } from '../lib/auth';
 
 type Q = { connector: string; fields: string[]; date_preset?: string; account?: string };
 const QUERIES: Record<string, Q> = {
