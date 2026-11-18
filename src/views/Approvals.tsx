@@ -6,8 +6,27 @@ import { supabase } from '../lib/supabase';
 const TYPE_LABEL: Record<string, string> = {
   instagram_post: 'Instagram', reel_script: 'Reel script', instagram_reply: 'Instagram reply', gbp_post: 'Google post',
   review_reply: 'Review reply', whatsapp: 'WhatsApp', pricing: 'Pricing', website: 'Website', app: 'App change',
-  partner: 'Partner pitch', task: 'Task for you', alert: 'Alert',
+  partner: 'Partner pitch', task: 'Task for you', alert: 'Alert', instagram_hide: 'Spam comment',
+  gbp_update: 'Google profile', facebook_post: 'Facebook post', youtube_reply: 'YouTube reply',
 };
+
+const PLATFORM: Record<string, string> = {
+  instagram_reply: 'Instagram', instagram_hide: 'Instagram', gbp_post: 'Google', review_reply: 'Google',
+  gbp_update: 'Google', facebook_post: 'Facebook', youtube_reply: 'YouTube', instagram_post: 'Instagram',
+};
+
+function canPublish(a: Approval): boolean {
+  const m = (a.meta || {}) as Record<string, unknown>;
+  if (m.publishedAt) return false;
+  switch (a.type) {
+    case 'instagram_reply': case 'instagram_hide': case 'youtube_reply': return !!m.commentId;
+    case 'review_reply': return !!m.reviewId;
+    case 'gbp_update': return !!m.action;
+    case 'instagram_post': return !!(m.imageUrl || m.videoUrl);
+    case 'gbp_post': case 'facebook_post': return true;
+    default: return false;
+  }
+}
 
 type Filter = 'pending' | 'approved' | 'closed';
 
@@ -38,11 +57,20 @@ export default function Approvals({ approvals, update, toast }: {
     setBusy((s) => { const n = new Set(s); n.delete(a.id); return n; });
   };
 
-  const postReply = (a: Approval) => run(a, async () => {
-    const { data } = await supabase.auth.getSession();
-    const r = await fetch('/api/ig-reply', { method: 'POST', headers: { 'content-type': 'application/json', authorization: `Bearer ${data.session?.access_token}` }, body: JSON.stringify({ id: a.id }) });
-    if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j.error || 'failed'); }
-  }, 'Reply posted on Instagram');
+  const publish = async (a: Approval, approveFirst: Partial<Approval> | null) => {
+    const where = PLATFORM[a.type || ''] || 'the platform';
+    if (!window.confirm(`Publish this on ${where} now? It goes live publicly.`)) return;
+    setBusy((s) => new Set(s).add(a.id));
+    try {
+      if (approveFirst) await update(a.id, { ...approveFirst, status: 'approved' });
+      const { data } = await supabase.auth.getSession();
+      const r = await fetch('/api/publish', { method: 'POST', headers: { 'content-type': 'application/json', authorization: `Bearer ${data.session?.access_token}` }, body: JSON.stringify({ id: a.id }) });
+      const j = await r.json().catch(() => ({ error: 'The server is not responding' }));
+      if (!r.ok) throw new Error(j.error || 'failed');
+      toast(j.message || 'Published');
+    } catch (e) { toast(`Not published: ${(e as Error).message}`); }
+    setBusy((s) => { const n = new Set(s); n.delete(a.id); return n; });
+  };
 
   const copy = async (a: Approval) => {
     try { await navigator.clipboard.writeText(a.body || ''); toast('Copied'); }
@@ -64,7 +92,8 @@ export default function Approvals({ approvals, update, toast }: {
       {!list.length && <div className="empty">{filter === 'pending' ? 'Nothing waiting. Your agents add drafts here as they work.' : 'Nothing here yet.'}</div>}
       {list.map((a) => {
         const isEdit = editing === a.id, isOpen = open.has(a.id), b = busy.has(a.id);
-        const canPost = a.type === 'instagram_reply' && !!(a.meta as { commentId?: string })?.commentId && a.status === 'approved';
+        const pub = canPublish(a);
+        const where = PLATFORM[a.type || ''];
         return (
           <article className="appr" key={a.id}>
             <div className="appr-top">
@@ -80,12 +109,14 @@ export default function Approvals({ approvals, update, toast }: {
             <div className="actions">
               {a.status === 'pending' && (isEdit ? (
                 <>
+                  {pub && <button className="btn go" disabled={b} onClick={() => { setEditing(null); publish(a, { body: draft, edited: true }); }}>Save &amp; publish on {where}</button>}
                   <button className="btn primary" disabled={b} onClick={() => { setEditing(null); run(a, () => update(a.id, { status: 'approved', body: draft, edited: true }), 'Saved and approved'); }}>Save &amp; approve</button>
                   <button className="btn" onClick={() => setEditing(null)}>Cancel</button>
                 </>
               ) : (
                 <>
-                  <button className="btn primary" disabled={b} onClick={() => run(a, () => update(a.id, { status: 'approved' }), 'Approved')}>Approve</button>
+                  {pub && <button className="btn go" disabled={b} onClick={() => publish(a, {})}>Approve &amp; publish on {where}</button>}
+                  <button className="btn primary" disabled={b} onClick={() => run(a, () => update(a.id, { status: 'approved' }), 'Approved')}>{pub ? 'Approve only' : 'Approve'}</button>
                   <button className="btn" onClick={() => { setDraft(a.body || ''); setEditing(a.id); }}>Edit</button>
                   <button className="btn ghost" disabled={b} onClick={() => run(a, () => update(a.id, { status: 'rejected' }), 'Rejected')}>Reject</button>
                 </>
@@ -94,12 +125,13 @@ export default function Approvals({ approvals, update, toast }: {
                 <button className="btn" onClick={() => copy(a)}>Copy text</button>
                 <button className="btn ghost" onClick={() => setOpen((s) => { const n = new Set(s); if (n.has(a.id)) n.delete(a.id); else n.add(a.id); return n; })}>{isOpen ? 'Show less' : 'Show all'}</button>
               </>}
-              {canPost && <button className="btn go" disabled={b} onClick={() => postReply(a)}>Post reply on Instagram</button>}
+              {pub && a.status === 'approved' && <button className="btn go" disabled={b} onClick={() => publish(a, null)}>Publish on {where}</button>}
               {a.status === 'approved' && <button className="btn" disabled={b} onClick={() => run(a, () => update(a.id, { status: 'done' }), 'Marked done')}>Mark done</button>}
               {(a.status === 'rejected' || a.status === 'done') && <button className="btn ghost" disabled={b} onClick={() => run(a, () => update(a.id, { status: 'pending' }), 'Moved back to pending')}>Undo</button>}
             </div>
             {a.result && <div className="note">{a.result}</div>}
-            {a.status === 'approved' && !canPost && a.how_to && <div className="note">Next step: {a.how_to}</div>}
+            {a.status === 'approved' && !pub && a.how_to && <div className="note">Next step: {a.how_to}</div>}
+            {pub && a.status === 'pending' && <div className="note">One tap publishes this on {where}. Or approve it only and publish later.</div>}
           </article>
         );
       })}
