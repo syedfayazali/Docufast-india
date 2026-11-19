@@ -289,6 +289,16 @@
 
   /* ============ SERVICES ============ */
   .services{padding:120px 0;}
+  /* ===== Prices ===== */
+  .prices{padding:100px 0;background:#F7F9FD}
+  .price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:36px}
+  .price-card{background:#fff;border:1px solid rgba(10,46,110,.1);border-radius:18px;padding:22px 22px 10px;box-shadow:0 10px 30px -18px rgba(10,46,110,.35)}
+  .price-card h3{font-family:'Poppins';font-size:17px;color:var(--navy);margin:0 0 10px}
+  .price-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px dashed rgba(10,46,110,.14);font-size:15px}
+  .price-row b{color:var(--navy);white-space:nowrap;font-family:'Poppins'}
+  .price-row small{display:block;color:#64748B;font-size:12.5px;margin-top:2px}
+  .price-note{margin-top:22px;font-size:14px;color:#475569;line-height:1.6;text-align:center}
+
   .svc-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:22px;}
   .svc-card{
     background:#fff; border-radius:var(--radius-md); padding:30px 24px;
@@ -796,6 +806,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
     <nav class="links">
       <a href="#home">Home</a>
       <a href="#services">Services</a>
+      <a href="#prices">Prices</a>
       <a href="#how">How It Works</a>
       <a href="#faq">FAQ</a>
       <a href="#coverage">Coverage</a>
@@ -874,6 +885,20 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
     <div class="svc-grid stagger" id="svcGrid">
       <!-- cards injected for stagger via JS-friendly markup, but written statically -->
     </div>
+  </div>
+</section>
+
+
+<!-- ================= PRICES ================= -->
+<section class="prices" id="prices">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow"><span class="dot"></span> Clear prices</div>
+      <h2>Our service fees</h2>
+      <p>This is what we charge for our help. Government fees, where they apply, are separate and paid at actuals.</p>
+    </div>
+    <div class="price-grid"><div class="price-card"><h3>Identity documents</h3><div class="price-row"><span>New PAN / PAN correction</span><b>₹129</b></div><div class="price-row"><span>Aadhaar update help</span><b>₹79</b></div><div class="price-row"><span>Passport (normal)</span><b>₹349</b></div><div class="price-row"><span>Passport (tatkaal)</span><b>₹599</b></div></div><div class="price-card"><h3>Licence & certificates</h3><div class="price-row"><span>Learner licence (LLR)</span><b>₹129</b></div><div class="price-row"><span>Driving licence</span><b>₹179</b></div><div class="price-row"><span>Income / caste / residence certificate<small>plus the MeeSeva fee</small></span><b>₹79</b></div></div><div class="price-card"><h3>Business registrations</h3><div class="price-row"><span>Udyam (MSME)<small>Udyam is free on the government portal; this is our help fee</small></span><b>₹199</b></div><div class="price-row"><span>GST registration</span><b>₹999</b></div><div class="price-row"><span>FSSAI basic</span><b>₹399</b></div><div class="price-row"><span>Trade licence</span><b>₹549</b></div><div class="price-row"><span>Shops & Establishments (Labour)</span><b>₹399</b></div><div class="price-row"><span>Rental agreement<small>plus stamp paper</small></span><b>₹399</b></div></div></div>
+    <p class="price-note">DocuFast India is a private document-assistance service, not a government office. We cannot promise approval or processing time; that is decided by the department.<br>Not sure what you need? <a href="https://wa.me/918374968022?text=Hi%20DocuFast%2C%20I%20need%20a%20price%20for%20" target="_blank" rel="noopener"><b>WhatsApp 83749 68022</b></a> for an exact quote.</p>
   </div>
 </section>
 
@@ -1286,7 +1311,7 @@ const faqs = [
   {q:'How do I track my order?', a:'Every order comes with a tracking ID, and we update you at each stage. You can also call us on 08542-355200 with your tracking ID for the latest status.'},
   {q:'Is my data and document information secure?', a:'Yes. We follow strict data privacy practices and secure handling protocols for every document and personal detail you share with us.'},
   {q:'What documents can I apply for?', a:'Passport, PAN, Aadhaar, Driving Licence, Voter ID, PVC ID cards, along with printing, scanning and lamination services.'},
-  {q:'How much does it cost?', a:'Our service fee depends on the document and the service you need. Government fees, where applicable, are separate and paid at actuals. Call 08542-355200 or send an enquiry for an exact quote before you begin.'},
+  {q:'How much does it cost?', a:'Our service fees are listed in the Prices section, for example New PAN ₹129, Passport ₹349, GST registration ₹999. Government fees, where applicable, are separate and paid at actuals. WhatsApp 83749 68022 for an exact quote before you begin.'},
   {q:'How long does processing usually take?', a:'Processing time varies by service and government turnaround, but we keep you updated at every stage so there are no surprises.'},
 ];
 document.getElementById('faqWrap').innerHTML = faqs.map((f,i)=>`
